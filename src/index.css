@@ -1,13 +1,432 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+a {
+  /* color: #c98ffd;
+  text-decoration: none; */
+  text-decoration: none;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+img {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+a:hover {
+  /* text-decoration: underline; */
+}
+
+.center {
+  text-align: center;
+}
+
+.indent {
+  margin: 5px 20px !important;
+}
+
+.col {
+  margin: 15px 0;
+}
+
+/* Fonts */
+
+@font-face {
+  font-family: Windows1995;
+  src: url('https://cdn.glitch.com/fa066b1d-15e7-4dd0-bf69-ee7ab381630c%2Fwindows1995.otf?v=1574316644062') format('truetype');
+}
+html{
+  height: 100vh;
+  width: 100vw;
+  overflow:hidden;
+}
+
+/* body {
+  overflow: hidden;
+  margin:0px;
+} */
+
+/* #root {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+} */
+
+/* Canvas */
+div > #defaultCanvas0 {
+  overflow: hidden;
+}
+
+#defaultCanvas0 {
+  z-index: 2;
+  top: 0;
+  left: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Desktop */
+.background {
+  background-image: url('./assets/mojave_day.jpg');
+  /* background-color: #d8d8d8;   */
+  background-size: cover;
+  background-position-x: center;
+  background-position-y: center;
+  height: 100%;
+  width: 100vw;
+  left: 0;
+  position: absolute;
+  top: 0;
+  /* background-image: url('https://d7hftxdivxxvm.cloudfront.net/?resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=1200&quality=80'); */
+}
+
+#fullscreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #000000a8;
+  z-index: 5;
+  display: none;
+  align-items: center;
+  overflow: hidden;
+}
+
+#close-fullscreen {
+  right: 0;
+  color: white;
+  position: absolute;
+  margin-right: 20px;
+  font-size: 40px;
+  cursor: pointer;
+  top: 0;
+    margin-top: 20px;
+}
+
+#fullscreen > img {
+  max-width: 100vw;
+  max-height: 80vh;
+  width: auto;
+  margin: auto;
+}
+
+/* Desktop Icons */
+
+.desktop-icon {
+  position: relative;
+  height: 100px;
+  width: 100px;
+  margin: 50px 15px;
+  text-align: center;
+  font-family: 'Windows1995', Arial, sans-serif;
+  color: black;
+  font-size: 12px;
+  background-position: center;
+  
+}
+
+.desktop-icon.selected::after {
+  background-color: #6d2f6d8c;
+  padding: 2px 6px;
+  border: 1px dotted #9a9a9a;
+}
+
+.desktop-icon:hover{
+  cursor:pointer;
+}
+
+.desktop-icon:after {
+  bottom: -100px;
+  position: relative;
+  transition: background-color .05s ease-in-out;
+}
+
+/* .desktop-icon.selected {
+  background-color: #020096a6;
+  border-radius: 2px;
+}
+
+.desktop-icon.selected:after {
+  background-color: #020096a6;
+  border-radius: 2px;
+} */
+
+#about-me-btn {
+  background-image: url('./assets/SueIcon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#blog-btn {
+  background-image: url('./assets/cat.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#blog-btn:after {
+  content: 'itp blog';
+}
+
+#about-me-btn:after {
+  content: 'about me';
+}
+
+#work-btn {
+  background-image: url('./assets/monster.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#work-btn:after {
+  content: 'work';
+}
+
+#start-button {
+  height: 40px;
+  background-image: url('./assets/StartButton.png');
+  width: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: filter .2s;
+}
+
+#start-button:hover{
+  cursor:pointer;
+}
+
+#start-button.active {
+  filter: invert(.7);
+}
+
+#internet-expl-nav {
+  padding: 7px 9px;
+  height: fit-content;
+  margin-top: 1px;
+  border-radius: 1px;
+  font-size: 12px;
+  background-color: #e0e0e0;
+  border: 2px inset;
+  display: none;
+}
+
+.bar-container {
+  width: 100%;  
+  height: 40px;
+  bottom: 0;
+  position: absolute;
+  left: 0;
+  background-color: #c2c2c2;
+  border-top: 2px white ridge;
+  display: flex;
+  z-index: 3;
+}
+
+.nav-button {
+  font-family: 'Windows1995', Arial, sans-serif;
+  cursor: pointer;
+  user-select: none;
+}
+
+.right-nav {
+  align-self: center;
+  justify-self: flex-end;
+  margin-left: auto;
+  margin-right: 20px;
+  font-family: 'Windows1995', Arial, sans-serif;
+  font-size: 11px;
+  border-left: 3px ridge;
+  padding-left: 10px;
+  height: inherit;
+  display: flex;
+  align-items: center;
+}
+
+/* styles for windows and popups */
+
+.os-container {
+  display: flex;
+}
+
+.window-layer{
+  width:100vw;
+  height:100vh;
+  position:absolute;
+  z-index:1;
+  top:0px;
+  left:0px;
+  pointer-events:none;
+}
+
+.window-layer *{
+  pointer-events:all;
+}
+
+
+.popup .content{
+  width: calc(100% - 10px);
+  margin:3px;
+  border:2px white inset;
+}
+
+.topBar{
+  background-color: #1300c8;
+  width:100%;
+  height:24px;
+
+}
+
+.button{
+  background-color:#c2c2c2;
+  border: 1px white outset;
+  text-align:center;
+  
+}
+.button:hover{
+  cursor:pointer;
+}
+.close.button{
+  width:18px;
+  height:18px;
+  line-height:18px;
+  float:right;
+  margin:2px;
+  
+}
+
+/* Browser */
+.browser {
+  position: absolute;
+}
+
+.browser-page {
+  height: 70vh;
+  border: 1px outset;
+  background-image: url('https://cdn.glitch.com/fa066b1d-15e7-4dd0-bf69-ee7ab381630c%2FScreen%20Shot%202019-11-22%20at%202.29.41%20AM.png?v=1574407793809');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.iframe-page {
+  background:white;
+  width:100%;
+  height: 70vh;
+  border: 1px outset;
+
+}
+
+.top-browserNav-container {
+  display: block;
+/*   width: 100vw; */
+  width:100%;
+}
+
+.ie-control-container {
+  height: 30px;
+  border: 1px outset;
+  font-family: 'Windows1995', Arial, sans-serif;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+
+.ie-control-item {
+  position: relative;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+.ie-control-item:hover {
+  color: white;
+  background-color: #1300c8;
+}
+
+.social-icons-container {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.social-icon {
+  height: 100%;
+  width: 25px;
+  margin: 0 3px;
+}
+
+/* .social-icon.instagram {
+    background-image: url('/assets/ig.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+} */
+
+.social-icon.linkedin {
+  background-image: url('./assets/linkedin.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+
+.social-icon.email {
+  background-image: url('./assets/mail.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+
+.social-icon.github {
+  background-image: url('./assets/github.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+
+.glitch-overlay {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  /* pointer-events: none; */
+  background-position: center;
+  /* background-image: url('https://media.giphy.com/media/l44Qqq69E0gTyqLwk/giphy.gif'); */
+  background-image: url('https://media.giphy.com/media/xTg8AKwLuATTlopV3a/giphy.gif');
+  /* background-image: url('https://media.giphy.com/media/l4hLRXU860T7833I4/giphy.gif'); */
+  /* background-image: url('https://media.giphy.com/media/3o7aD54MhcMV0Sx89q/giphy.gif'); */
+  /* background-image: url('https://media0.giphy.com/media/xT9DPKRsasi854mo6Y/giphy.gif?cid=790b76119a8deb4041f9224c130b1da47dabe8215b03f7a5&rid=giphy.gif'); */
+  /* background-image: url('https://media3.giphy.com/media/TUZDmN6mBb37a/giphy.gif?cid=790b761183e5a088e67c8ecf41b5e3bc183eb24435c35fbb&rid=giphy.gif'); */
+  backdrop-filter: brightness(0.5) saturation(1);
+  z-index:100;
+  opacity:.5;
+  position: absolute;
+  transform: scale(1.2);
+}
+
+.upside-down {
+  -webkit-transform:rotate(-180deg);
+-moz-transform:rotate(-180deg);
+-o-transform:rotate(-180deg);
+transform:rotate(-180deg);
+-ms-filter:"progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+#clock {
+  cursor: pointer;
 }
