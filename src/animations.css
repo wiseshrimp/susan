@@ -9,6 +9,14 @@
     -ms-animation: fadeIn ease .5s;
   }
 
+  .fade-out {
+    animation: fadeOut ease .5s;
+    -webkit-animation: fadeOut ease .5s;
+    -moz-animation: fadeOut ease .5s;
+    -o-animation: fadeOut ease .5s;
+    -ms-animation: fadeOut ease .5s;
+  }
+
 .glitch-overlay.fade-in {
   animation: fadeInGlitch ease .5s;
   -webkit-animation: fadeInGlitch ease .5s;
@@ -63,48 +71,93 @@
   }
 }
    
-  @keyframes fadeIn{
+  @keyframes fadeOut{
     0% {
-      opacity:0;
+      opacity:1;
     }
     100% {
-      opacity:1;
+      opacity:0;
     }
   }
    
-  @-moz-keyframes fadeIn {
+  @-moz-keyframes fadeOut {
     0% {
-      opacity:0;
+      opacity:1;
     }
     100% {
-      opacity:1;
+      opacity:0;
     }
   }
    
-  @-webkit-keyframes fadeIn {
+  @-webkit-keyframes fadeOut {
     0% {
-      opacity:0;
+      opacity:1;
     }
     100% {
-      opacity:1;
+      opacity:0;
     }
   }
    
-  @-o-keyframes fadeIn {
+  @-o-keyframes fadeOut {
     0% {
-      opacity:0;
+      opacity:1;
     }
     100% {
-      opacity:1;
+      opacity:0;
     }
   }
    
-  @-ms-keyframes fadeIn {
+  @-ms-keyframes fadeOut {
     0% {
-      opacity:0;
+      opacity:1;
     }
     100% {
+      opacity:0;
+    }
+  }
+
+  @keyframes fadeOut{
+    0% {
       opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+   
+  @-moz-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+   
+  @-webkit-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+   
+  @-o-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+   
+  @-ms-keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
     }
   }
  

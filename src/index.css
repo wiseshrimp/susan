@@ -1,3 +1,19 @@
+@font-face {
+  font-family: LucidaS;
+  src: url('./assets/SF-UI-Text-Medium.otf');
+}
+
+@font-face {
+  font-family: LucidaG;
+  src: url('./assets/LucidaGrandeRegular.ttf');
+}
+
+@font-face {
+  font-family: Helvetica;
+  src: url('./assets/Helvetica.ttf');
+}
+
+
 a {
   /* color: #c98ffd;
   text-decoration: none; */
@@ -26,6 +42,21 @@ a:hover {
 
 .col {
   margin: 15px 0;
+}
+
+.avatar-video {
+  z-index: 2;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: auto;
+  transition: opacity 1s ease-in-out;
+}
+
+.hidden-video {
+  display: none;
 }
 
 /* Fonts */
@@ -429,4 +460,172 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
 
 #clock {
   cursor: pointer;
+}
+
+.top-bar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 23px;
+  background-color: #c4c4c4d4;
+  width: 100vw;
+  border-bottom-style: groove;
+  border-bottom-width: 1px;
+  border-color: #cacaca;
+  box-shadow: 1px 0px 8px #616161;
+  z-index: 2;
+  padding: 0 10px;
+  display: flex;
+}
+
+.right-bar-container {
+  display: flex;
+  justify-self: flex-end;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.left-bar-container {
+  display: flex;
+}
+
+.apple {
+  background-image: url('./assets/apple.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+  margin: 3px 15px;
+  cursor: pointer;
+}
+
+.time {
+  background-image: url('./assets/clock.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 15px;
+  width: 15px;
+  margin: 3px 8px;
+  cursor: pointer;
+}
+
+.wifi {
+  background-image: url('./assets/wifi.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+  margin: 3px 8px;
+  cursor: pointer;
+}
+
+.battery {
+  background-image: url('./assets/battery.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+  margin: 3px 8px;
+  cursor: pointer;
+}
+
+
+.topbar-text {
+  font-family: LucidaS;
+  font-weight: bold;
+  align-self: center;
+  font-size: 12px;
+  margin: 0px 4px;
+  cursor: pointer;
+}
+
+.mojave-night {
+  background-image: url('./assets/mojave-night.jpg');
+  background-size: cover;
+  background-position-x: center;
+  background-position-y: center;
+  height: 100%;
+  width: 100vw;
+  left: 0;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+.dashboard-container {
+  opacity: 0;
+  bottom: -7px;
+  height: 85px;
+  background-color: #8787879c;
+  width: 330px;
+  left: calc(50vw - 165px);
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #212121cf;
+  display: flex;
+  justify-content: space-around;
+  z-index: 2;
+  position: absolute;
+  transition: opacity 1s;
+}
+
+.dashboard-container.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.dashboard-icon {
+  align-self: center;
+  cursor: pointer;
+}
+
+.right-dashboard {
+}
+
+.right-dashboard:before {
+    content: '';
+    border-left: 1px solid #727272;
+    top: 30px;
+    position: relative;
+    border-left-style: outset;
+    padding: 20px 0;
+}
+
+.dashboard-icon {
+  cursor: pointer;
+}
+
+.finder {
+  background-image: url('./assets/finder.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 70px;
+  width: 70px;
+  margin: 3px 8px;
+}
+
+.safari {
+  background-image: url('./assets/safari.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 65px;
+  width: 65px;
+  margin: 8px 8px;
+}
+
+.photos {
+  background-image: url('./assets/photos.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 70px;
+  width: 70px;
+  margin: 5px 8px;
+}
+
+.trash {
+  background-image: url('./assets/trash.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 70px;
+  width: 70px;
+  margin: 5px 8px;
 }

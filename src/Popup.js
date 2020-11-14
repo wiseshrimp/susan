@@ -1,9 +1,8 @@
 import React from 'react'
 import Draggable from 'react-draggable'
-import {Link} from 'react-router-dom'
 
 import './Popup.css'
-
+import './Photos.css'
 
 export default class Popup extends React.Component {
     constructor(props) {
@@ -61,20 +60,29 @@ export default class Popup extends React.Component {
                     style={fullscreenStyle}
                     className="window popup" >
                     <div className="top-bar">
-                    <Link to="/">
-                        <div 
+                    <div className="left-top-bar">
+                            <div className="safari-close">&#10005;</div>
+                            <div className="safari-expand"></div>
+
+                        </div>
+                        <input placeholder="Search or enter website name" className="safari-search" />
+                        <div className="left-top-bar">
+                            <div className="safari-close">&#10005;</div>
+                            <div className="safari-expand"></div>
+
+                        </div>
+                        <input placeholder="Search or enter website name" className="safari-search" />
+                        {/* <div 
                             id="close-button"
                             className="noselect"
                             onClick={this.onWindowClose}>&#10005;</div>
 
-                    </Link>
                     <div 
                             id="expand-button" className="noselect"
                             onClick={this.expandWindow}>
                                 <div id="expand" />
-                            </div>
+                            </div> */}
                     </div>
-
                 </div>
             </Draggable>
         )

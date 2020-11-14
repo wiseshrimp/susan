@@ -1,34 +1,70 @@
 import React from 'react'
-import { BrowserRouter, Route } from "react-router-dom"
 import Sketch from 'react-p5'
 
 import Popup from './Popup'
+import Photos from './Photos'
 import './App.css'
+
+const VIDEOS = {
+  openingVideo: 'openingVideo',
+  photosOpeningVideo: 'photosOpeningVideo',
+  emptyRoomVideo: 'emptyRoomVideo',
+  battery: 'battery',
+  wifi: 'wifi',
+  finder: 'finder',
+  trash: 'trash'
+}
 
 class Desktop extends React.Component {
   constructor(props) {
     super(props)
+
+    this.dashboardRef = React.createRef()
+    this.openingVideo = React.createRef()
+    this.photosOpeningVideo = React.createRef()
+    this.emptyRoomVideo = React.createRef()
+    this.endEmptyRoomVideo = React.createRef()
+    this.battery = React.createRef()
+    this.wifi = React.createRef()
+    this.finder = React.createRef()
+    this.trash = React.createRef()
+
     this.state = {
+      hasLoaded: false, // for video play error
+      activeVideo: null,
       isDragging: false,
       endClient: [null, null],
       startClient:[null, null],
-      popups: [],
-      isFullscreen: false
+      isDashboardVisible: false,
+      isLoading: false,
+      isPopup: false,
+      isPhotoPopup: false,
+      popup: null,
+      vIdx: 0
     }
   }
 
   componentDidMount() {
+    document.addEventListener('mousedown', this.onDragStart)
     window.addEventListener('resize', this.onResize)
   }
 
-  closeWindow = type => {
-    let pidx = this.state.popups.findIndex(popup => popup === type)
-    let popups = this.state.popups.slice()
-    popups.splice(pidx, 1)
+  addPopup = () => {
     this.setState({
-      popups
+      isPopup: true
     })
   }
+
+  addPhotoPopup = photo => {
+    let isPhotoPopup
+    if (this.state.isPhotoPopup) {
+      isPhotoPopup = false
+    }
+    this.setState({
+      isPhotoPopup: photo
+    })
+  }
+
   onDrag = ev => {
     if (!this.state.isDragging) return
     this.setState({
@@ -48,7 +84,14 @@ class Desktop extends React.Component {
     })
   }
 
-  onDragStart = ev => { // 
+  onDragStart = ev => {
+    if (!this.state.hasLoaded && this.state.isVideoLoaded) {
+      this.setState({
+        hasLoaded: true,
+        activeVideo: VIDEOS.openingVideo
+      })
+      this.openingVideo.current.play()
+    }
     document.addEventListener('mousemove', this.onDrag)
     document.addEventListener('mouseup', this.onDragEnd)
     this.setState({
@@ -73,6 +116,24 @@ class Desktop extends React.Component {
     this.setState({
       hasResized: true
     })
+  }
+
+  showDashboard = () => {
+    if (this.state.isDashboardVisible) return
+    this.setState({
+      isDashboardVisible: true
+    })
+    this.dashboardRef.current.classList.add('active')
+    this.dashboardRef.current.classList.add('slide-up-fade-in')
+
+  }
+
+  hideDashboard = () => {
+    this.setState({
+      isDashboardVisible: false
+    })
+    this.dashboardRef.current.classList.remove('active')
+    this.dashboardRef.current.classList.remove('slide-up-fade-in')
   }
 
   draw = p5 => {
@@ -114,44 +175,45 @@ class Desktop extends React.Component {
     )
   }
 
-  setFullscreen = isFullscreen => {
+  playPhotos = ev => {
+    if (this.state.activeVideo) {
+      this[this.state.activeVideo].current.classList.add('hidden-video')
+      this[this.state.activeVideo].current.pause()
+      this[this.state.activeVideo].current.classList.remove('avatar-video')
+    }
+    let ref = ev.target.dataset.ref
+    this[ref].current.classList.remove('hidden-video')
+    this[ref].current.classList.add('avatar-video')
+    this[ref].current.play()
     this.setState({
-      isFullscreen
+      activeVideo: VIDEOS[ref]
     })
+    if (VIDEOS[ref] === 'photosOpeningVideo') {
+      this.setState({
+        popup: 'photos'
+      })
+    }
   }
 
-  glitch = ev => {
-    if (this.state.isGlitching)
-      return
+  quitFullScreen = ev => {
+    let activeVideo
+    console.log(this.state)
+    if (this.state.activeVideo) {
+      this[this.state.activeVideo].current.pause()
+      this[this.state.activeVideo].current.classList.remove('avatar-video')
+      this[this.state.activeVideo].current.classList.add('hidden-video')
+    }
+    if (this.state.activeVideo === 'emptyRoomVideo') {
+      activeVideo = 'endEmptyRoomVideo'
+      this[activeVideo].current.classList.add('avatar-video')
+      this[activeVideo].current.classList.remove('hidden-video')
+      this[activeVideo].current.play()
+    }
     this.setState({
-      isGlitching: true
-    })
-    setTimeout(this.unglitch, 2000)
-  }
-  unglitch = () => {
-    this.setState({
-      isGlitching: false
+      isPhotoPopup: false,
+      activeVideo
     })
   }
-
-  renderPopup = type => (
-    <Popup 
-      key={type}
-      isFullscreen={this.state.isFullscreen}
-      setFullscreen={this.setFullscreen}
-      closeWindow={this.closeWindow}
-      type={type} />
-  )
-
-  renderSubRoute = (route, idx) => (
-    <Route exact path={route}
-      key={`${route}-${idx}`}
-      render={props => <Popup 
-        {...props}
-      setFullscreen={this.setFullscreen} 
-      isFullscreen={this.state.isFullscreen} />}
-    />
-  )
   
   setup = (p5, canvasParentRef) => {
     p5.createCanvas(
@@ -177,46 +239,133 @@ class Desktop extends React.Component {
     if (this.state.isDragging) {
       this.drawDragRect(p5)
     }
-    if (this.state.isGlitching) {
-      p5.image(this.sueicon, Math.random() * window.innerWidth - this.sueicon.width / 2, window.innerHeight * Math.random() - this.sueicon.height / 2)
-      p5.image(this.caticon, Math.random() * window.innerWidth - this.caticon.width / 2, window.innerHeight * Math.random() - this.caticon.height / 2)
-      p5.image(this.monstericon, Math.random() * window.innerWidth - this.monstericon.width / 2, window.innerHeight * Math.random() - this.monstericon.height / 2)
+  }
+
+  onLoadedData = ev => {
+    this.setState({
+      isVideoLoaded: true
+    })
+  }
+
+  hideVideo = ev => {
+    ev.target.currentTime = 0
+    ev.target.pause()
+    ev.target.classList.remove('avatar-video')
+    ev.target.classList.add('hidden-video')
+
+    this.setState({
+      activeVideo: null
+    })
+  }
+
+
+  renderPopup = () => {
+    if (this.state.popup === 'photos') return <Photos 
+      addPopup={this.addPhotoPopup}  
+      isPhotoPopup={this.state.isPhotoPopup}
+      quitFullScreen={this.quitFullScreen}
+      playVideo={this.playPhotos} />
+    else return <Popup />
+  }
+
+  onTimeUpdate = ev => {
+    if (ev.target.currentTime > ev.target.duration - 0.5) {
+      ev.target.pause()
     }
   }
 
   render() {
     return (
-      <BrowserRouter>
-    <Sketch setup={this.setup} draw={this.draw} />
       <div>
-        <div id="fullscreen" className="fade-in">
-          <img
-            alt="fullscreen of project"
-            id="fullscreen-img" 
-            src="" />
-          <div id="close-fullscreen">&#10005;</div>
-        </div>
-        <div className="os-container">
-          <div className="background"
-            onMouseDown={this.onDragStart}
-            onMouseLeave={this.onMouseLeave}
-          ></div>
-          <div className="desktop-container">
-            <div className="bar-container">
-              <div 
-                className="nav-button" 
-                id="start-button"></div>
-              <div className="nav-button" id="internet-expl-nav">
-                Internet Explorer
+        <Sketch setup={this.setup} draw={this.draw} />
+          <div>
+            {this.state.popup ? this.renderPopup() : null}
+            {this.state.isPhotoPopup ? this.renderPopup() : null}
+            <div className="os-container">
+              <video className="avatar-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.openingVideo}
+                onLoadedData={this.onLoadedData}
+                onEnded={this.hideVideo}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Opening_Full.webm" />
+              <video className="hidden-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.photosOpeningVideo}
+                data-ref="photosOpeningVideo"
+                onEnded={this.hideVideo}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Photos_Opening_1.webm" />
+
+              <video className="hidden-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.emptyRoomVideo}
+                onEnded={this.hideVideo}
+                onTimeUpdate={this.onTimeUpdate}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Photos_EmptyRoom.webm" />
+              <video className="hidden-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.endEmptyRoomVideo}
+                onEnded={this.hideVideo}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Photos_EmptyRoom_EnoughOfThat_1.webm" />
+              <video className="hidden-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.battery}
+                onEnded={this.hideVideo}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/TopBar_Battery_1.webm" />
+              <video className="hidden-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.wifi}
+                onEnded={this.hideVideo}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/TopBar_WiFi.webm" />
+              <video className="hidden-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.finder}
+                onEnded={this.hideVideo}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/TopBar_Finder.webm" />
+              <video className="hidden-video" 
+                width="500px" height="500px" 
+                type="video/webm"  
+                ref={this.trash}
+                onEnded={this.hideVideo}
+                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Trash.webm" />
+              <div className="background"
+                onMouseLeave={this.onMouseLeave}
+              ></div>
+            <div className="top-bar-container">
+              <div className="left-bar-container">
+                <div data-ref="finder" onClick={this.playPhotos} className="icon apple"></div>
+                {/* <div className="topbar-text">Finder</div> */}
               </div>
-              <div className="right-nav">
+              <div className="right-bar-container">
+                <div data-ref="wifi" onClick={this.playPhotos} className="icon wifi"></div>
+                <div data-ref="battery" onClick={this.playPhotos} className="icon battery"></div>
+                <div className="icon time"></div>
               </div>
+            </div>
+            <div className="dashboard-container"
+              onMouseEnter={this.showDashboard}
+              onMouseLeave={this.hideDashboard}
+              ref={this.dashboardRef}>
+              <div data-ref="finder" onClick={this.playPhotos} className="dashboard-icon finder"></div>
+              <div onClick={this.addPopup} className="dashboard-icon safari"></div>
+              <div className="dashboard-icon photos" 
+                data-ref="photosOpeningVideo"
+                onClick={this.playPhotos}></div>
+              <div className="right-dashboard">
+
+              </div>
+              <div onClick={this.playPhotos} data-ref="trash" className="trash"></div>
+
+            </div>
             </div>
           </div>
         </div>
-      </div>
-      </BrowserRouter>
-    
     )
   }
 }
