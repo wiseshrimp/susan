@@ -553,8 +553,7 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
 }
 
 .dashboard-container {
-  opacity: 0;
-  bottom: -7px;
+  bottom: 0;
   height: 85px;
   background-color: #8787879c;
   width: 330px;

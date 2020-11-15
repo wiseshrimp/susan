@@ -8,81 +8,58 @@ export default class Popup extends React.Component {
     constructor(props) {
         super(props)
 
-
+        this.safariIframe = React.createRef()
+        this.safariBody = React.createRef()
         this.state = {
-            isFullscreen: props.isFullscreen
+            isFullscreen: props.isFullscreen,
+            input: 'dsd'
         }
 
-        this.windowRef = React.createRef()
-        this.subWindowRef = React.createRef()
     }
 
     componentDidMount() {
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-            Array.from(document.getElementsByClassName('caption')).forEach(caption => {
-                caption.classList.add('mobile')
-            })
+        document.addEventListener('keydown', this.onEnter)
+    }
+
+    
+    onInput = ev => {
+        this.setState({
+            input: ev.target.value
+        })
+        if (ev.which === 13) {
+            let input = this.state.input
+            input.replace('https://', '')
+            if (this.safariIframe.current)
+                this.safariIframe.current.src = `https://${input}`
         }
     }
 
-    expandWindow = ev => {
-        let isMinimized = this.state.isFullscreen
-        this.props.setFullscreen(!isMinimized)
-        this.windowRef.current.style.width = isMinimized ? '80vw' : 'width: calc(100% - 4px);'
-        this.windowRef.current.style.transform = 'none'
-        this.windowRef.current.style.top = '0'
-        this.windowRef.current.style.left = '0'
-        this.windowRef.current.style.height = isMinimized ? '70vh' : 'calc(100% - 40px)'
-        this.subWindowRef.current.style.height = isMinimized ? '70vh' : 'calc(100% - 40px)'
-        this.setState({
-            isFullscreen: !isMinimized
-        })
+    close = ev => {
+        this.props.closePopup(this.props.type)
     }
 
 
     render() {
-        let fullscreenStyle = {}
-        if (this.state.isFullscreen) {
-            fullscreenStyle = {
-                width: 'calc(100% - 4px)',
-                top: '0',
-                left: '0',
-                height: 'calc(100% - 40px',
-                transform: 'none'
-            }
-        }
         return (
-            <Draggable 
+            <Draggable
                 handle=".top-bar"
                 bounds="html">
-                <div 
-                    ref={this.windowRef}
-                    style={fullscreenStyle}
-                    className="window popup" >
+                <div
+                    className="window popup safari" >
                     <div className="top-bar">
-                    <div className="left-top-bar">
-                            <div className="safari-close">&#10005;</div>
-                            <div className="safari-expand"></div>
-
+                        <div className="buttons">
+                            <div onClick={this.close} className="close">
+                                <a className="closebutton"><span><strong>x</strong></span></a>
+                            </div>
                         </div>
-                        <input placeholder="Search or enter website name" className="safari-search" />
-                        <div className="left-top-bar">
-                            <div className="safari-close">&#10005;</div>
-                            <div className="safari-expand"></div>
 
-                        </div>
-                        <input placeholder="Search or enter website name" className="safari-search" />
-                        {/* <div 
-                            id="close-button"
-                            className="noselect"
-                            onClick={this.onWindowClose}>&#10005;</div>
-
-                    <div 
-                            id="expand-button" className="noselect"
-                            onClick={this.expandWindow}>
-                                <div id="expand" />
-                            </div> */}
+                        <input type="text" placeholder="Search or enter website name" onKeyPress={this.onInput} className="safari-search" />
                     </div>
+                    <div ref={this.safariBody} className="safari-body">
+                        <div className="h3">Favorites</div>                            
+                    </div>
+                    <iframe src="" ref={this.safariIframe} className="iframe-safari" />
+
                 </div>
             </Draggable>
         )

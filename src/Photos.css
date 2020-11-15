@@ -1,12 +1,24 @@
 .photos-container {
     display: flex;
+    padding: 25px;
 }
 
 .icon-container {
-    padding: 25px;
     text-align: center;
-    font-family: '';
     font-size: 13px;
+    border-radius: 3px;
+}
+
+.i-container {
+    margin: 10px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.p-container {
+    top: -22px;
+    position: relative;
 }
 
 .photo-container {
@@ -16,8 +28,8 @@
 }
 
 .photos-icon {
-    height: 150px;
-    width: 175px;
+    height: 100px;
+    width: 140px;
     border-radius: 5px;
     margin: 2px;
     border-radius: 2px;
@@ -28,11 +40,21 @@
     background-size: cover;
 }
 
+.tree {
+    background-image: url(https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/tree.jpg);
+    background-size: cover;
+}
+
 .icon-title {
     text-align: center;
     font-family: 'Helvetica';
     font-size: 13px;
+    margin: 15px 0;
+    width: fit-content;
+    padding: 2px 8px;
+    border-radius: 12px;
 }
+
 
 .fullscreen-photo {
     width: 100%;
@@ -40,4 +62,20 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.folder {
+    background-image: url('./assets/folder1.png');
+    background-size: cover;
+    height: 125px;
+
+}
+
+.private-container {
+    overflow-y: auto;
+}
+
+.private-img {
+    width: 100%;
+    height: auto;
 }

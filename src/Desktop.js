@@ -3,67 +3,131 @@ import Sketch from 'react-p5'
 
 import Popup from './Popup'
 import Photos from './Photos'
+import {POPUPS, VIDEOS, VIDEO_LINKS} from './constants'
 import './App.css'
+import Selfie1 from './assets/Selfie1.png'
+import Selfie2 from './assets/Selfie2.png'
+import Selfie3 from './assets/Selfie3.png'
 
-const VIDEOS = {
-  openingVideo: 'openingVideo',
-  photosOpeningVideo: 'photosOpeningVideo',
-  emptyRoomVideo: 'emptyRoomVideo',
-  battery: 'battery',
-  wifi: 'wifi',
-  finder: 'finder',
-  trash: 'trash'
-}
+
+const AVATAR_PHOTOS = [
+  Selfie1,
+  Selfie2,
+  Selfie3,
+  Selfie2
+]
 
 class Desktop extends React.Component {
   constructor(props) {
     super(props)
 
-    this.dashboardRef = React.createRef()
+    this.videoFeed = React.createRef()
     this.openingVideo = React.createRef()
     this.photosOpeningVideo = React.createRef()
     this.emptyRoomVideo = React.createRef()
     this.endEmptyRoomVideo = React.createRef()
+    this.privateFolderVideo = React.createRef()
+    this.endPrivateVideo = React.createRef()
+    this.treeVideo = React.createRef()
     this.battery = React.createRef()
     this.wifi = React.createRef()
     this.finder = React.createRef()
     this.trash = React.createRef()
 
     this.state = {
+      popups: [],
       hasLoaded: false, // for video play error
       activeVideo: null,
       isDragging: false,
       endClient: [null, null],
       startClient:[null, null],
-      isDashboardVisible: false,
       isLoading: false,
-      isPopup: false,
-      isPhotoPopup: false,
-      popup: null,
-      vIdx: 0
+      images: []
     }
   }
 
   componentDidMount() {
     document.addEventListener('mousedown', this.onDragStart)
     window.addEventListener('resize', this.onResize)
-  }
-
-  addPopup = () => {
-    this.setState({
-      isPopup: true
-    })
-  }
-
-  addPhotoPopup = photo => {
-    let isPhotoPopup
-    if (this.state.isPhotoPopup) {
-      isPhotoPopup = false
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          this.videoFeed.current.srcObject = stream
+          setTimeout(this.takePhoto, 3000)
+          setTimeout(this.takePhoto, 15000)
+          setTimeout(this.takePhoto, 20000)
+          setTimeout(this.takePhoto, 30000) // TO DO: Stop camera after taking last photo
+        })
+        .catch(function (err0r) {
+          console.log(err0r) // TO DO: Popup error about webcam
+        })
     }
+  }
+
+  addPopup = ev => {
+    if (this.state.popups.includes(ev.target.dataset.popup)) return
     this.setState({
-      isPhotoPopup: photo
+      popups: [...this.state.popups, ev.target.dataset.popup]
+    })
+    this.playVideo(ev)
+  }
+
+  resetVideo = video => {
+    this[video].current.classList.remove('avatar-video')
+    this[video].current.classList.add('hidden-video')
+    this[video].current.currentTime = 0
+    this[video].current.pause()
+  }
+
+  takePhoto = ev => {
+    if (!this.videoFeed) return
+    if (!this.videoFeed.current) return
+    var img = document.createElement('img')
+    let aImg = document.createElement('img')
+    aImg.src = AVATAR_PHOTOS[this.state.images.length]
+    aImg.onload = ev => {
+      let video = this.videoFeed.current
+      var context, canvas
+      var width = video.offsetWidth
+        , height = video.offsetHeight
+  
+      canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+  
+      context = canvas.getContext('2d')
+      context.drawImage(video, 0, 0, width, height)
+      
+      context.drawImage(aImg, width / 5, height - aImg.height / aImg.width * width, width, aImg.height / aImg.width * width)
+  
+      img.src = canvas.toDataURL('image/png')
+      this.setState({
+        images: [...this.state.images, img.src]
+      })
+    }
+
+
+  }
+
+  closePopup = popup => {
+    if (popup === POPUPS.QUERETARO) {
+      this.playVideo(VIDEOS.endEmptyRoomVideo, false)
+    }
+    else if (popup === POPUPS.PRIVATE) {
+      this.playVideo(VIDEOS.endPrivateVideo, false)
+    }
+    else if (this.state.activeVideo) {
+      this.resetVideo(this.state.activeVideo)
+    }
+    let idx = this.state.popups.findIndex(p => p === popup)
+    let popups = this.state.popups.slice()
+    popups.splice(idx, 1)
+    this.setState({
+      popups,
+      activeVideo: null
     })
   }
+
 
   onDrag = ev => {
     if (!this.state.isDragging) return
@@ -88,9 +152,8 @@ class Desktop extends React.Component {
     if (!this.state.hasLoaded && this.state.isVideoLoaded) {
       this.setState({
         hasLoaded: true,
-        activeVideo: VIDEOS.openingVideo
       })
-      this.openingVideo.current.play()
+      this.playVideo(VIDEOS.openingVideo, false)
     }
     document.addEventListener('mousemove', this.onDrag)
     document.addEventListener('mouseup', this.onDragEnd)
@@ -116,24 +179,6 @@ class Desktop extends React.Component {
     this.setState({
       hasResized: true
     })
-  }
-
-  showDashboard = () => {
-    if (this.state.isDashboardVisible) return
-    this.setState({
-      isDashboardVisible: true
-    })
-    this.dashboardRef.current.classList.add('active')
-    this.dashboardRef.current.classList.add('slide-up-fade-in')
-
-  }
-
-  hideDashboard = () => {
-    this.setState({
-      isDashboardVisible: false
-    })
-    this.dashboardRef.current.classList.remove('active')
-    this.dashboardRef.current.classList.remove('slide-up-fade-in')
   }
 
   draw = p5 => {
@@ -175,46 +220,22 @@ class Desktop extends React.Component {
     )
   }
 
-  playPhotos = ev => {
+  playVideo = (ev, isEl = true) => {
     if (this.state.activeVideo) {
-      this[this.state.activeVideo].current.classList.add('hidden-video')
-      this[this.state.activeVideo].current.pause()
-      this[this.state.activeVideo].current.classList.remove('avatar-video')
+      this.resetVideo(this.state.activeVideo)
     }
-    let ref = ev.target.dataset.ref
+
+    let ref = isEl ? ev.target.dataset.ref : ev
+    if (!this[ref] || !this[ref].current) return
     this[ref].current.classList.remove('hidden-video')
     this[ref].current.classList.add('avatar-video')
     this[ref].current.play()
+
     this.setState({
       activeVideo: VIDEOS[ref]
     })
-    if (VIDEOS[ref] === 'photosOpeningVideo') {
-      this.setState({
-        popup: 'photos'
-      })
-    }
   }
 
-  quitFullScreen = ev => {
-    let activeVideo
-    console.log(this.state)
-    if (this.state.activeVideo) {
-      this[this.state.activeVideo].current.pause()
-      this[this.state.activeVideo].current.classList.remove('avatar-video')
-      this[this.state.activeVideo].current.classList.add('hidden-video')
-    }
-    if (this.state.activeVideo === 'emptyRoomVideo') {
-      activeVideo = 'endEmptyRoomVideo'
-      this[activeVideo].current.classList.add('avatar-video')
-      this[activeVideo].current.classList.remove('hidden-video')
-      this[activeVideo].current.play()
-    }
-    this.setState({
-      isPhotoPopup: false,
-      activeVideo
-    })
-  }
-  
   setup = (p5, canvasParentRef) => {
     p5.createCanvas(
       window.innerWidth, 
@@ -242,30 +263,39 @@ class Desktop extends React.Component {
   }
 
   onLoadedData = ev => {
-    this.setState({
-      isVideoLoaded: true
-    })
+    if (ev.target.dataset.ref === VIDEOS.emptyRoomVideo) {
+      ev.target.addEventListener('timeupdate', this.onTimeUpdate)
+    }
+    if (ev.target.dataset.ref === VIDEOS.openingVideo) 
+      this.setState({
+        isVideoLoaded: true
+      })
   }
 
   hideVideo = ev => {
-    ev.target.currentTime = 0
-    ev.target.pause()
     ev.target.classList.remove('avatar-video')
     ev.target.classList.add('hidden-video')
+    ev.target.currentTime = 0
+    ev.target.pause()
 
     this.setState({
       activeVideo: null
     })
   }
 
-
-  renderPopup = () => {
-    if (this.state.popup === 'photos') return <Photos 
-      addPopup={this.addPhotoPopup}  
-      isPhotoPopup={this.state.isPhotoPopup}
-      quitFullScreen={this.quitFullScreen}
-      playVideo={this.playPhotos} />
-    else return <Popup />
+  renderPopup = (type, idx) => {
+    switch (type) {
+      case POPUPS.SAFARI:
+        return <Popup closePopup={this.closePopup} />
+      default:
+        return <Photos 
+          key={`${type}-${idx}`}
+          type={type}
+          images={type === POPUPS.PRIVATE ? this.state.images : []}
+          addPopup={this.addPopup}  
+          closePopup={this.closePopup}
+          playVideo={this.playVideo} />
+    }
   }
 
   onTimeUpdate = ev => {
@@ -274,93 +304,49 @@ class Desktop extends React.Component {
     }
   }
 
+  renderVideo = (key, idx) => (
+    <video className="hidden-video" 
+      key={key}
+      width="500px" height="500px" 
+      type="video/webm"  
+      ref={this[key]}
+      data-ref={key}
+      onLoadedData={this.onLoadedData}
+      onEnded={this.hideVideo}
+      src={VIDEO_LINKS[key]} />
+  )
+
   render() {
     return (
       <div>
         <Sketch setup={this.setup} draw={this.draw} />
           <div>
-            {this.state.popup ? this.renderPopup() : null}
-            {this.state.isPhotoPopup ? this.renderPopup() : null}
+            {this.state.popups.map(this.renderPopup)}
             <div className="os-container">
-              <video className="avatar-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.openingVideo}
-                onLoadedData={this.onLoadedData}
-                onEnded={this.hideVideo}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Opening_Full.webm" />
-              <video className="hidden-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.photosOpeningVideo}
-                data-ref="photosOpeningVideo"
-                onEnded={this.hideVideo}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Photos_Opening_1.webm" />
-
-              <video className="hidden-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.emptyRoomVideo}
-                onEnded={this.hideVideo}
-                onTimeUpdate={this.onTimeUpdate}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Photos_EmptyRoom.webm" />
-              <video className="hidden-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.endEmptyRoomVideo}
-                onEnded={this.hideVideo}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Photos_EmptyRoom_EnoughOfThat_1.webm" />
-              <video className="hidden-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.battery}
-                onEnded={this.hideVideo}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/TopBar_Battery_1.webm" />
-              <video className="hidden-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.wifi}
-                onEnded={this.hideVideo}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/TopBar_WiFi.webm" />
-              <video className="hidden-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.finder}
-                onEnded={this.hideVideo}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/TopBar_Finder.webm" />
-              <video className="hidden-video" 
-                width="500px" height="500px" 
-                type="video/webm"  
-                ref={this.trash}
-                onEnded={this.hideVideo}
-                src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Trash.webm" />
-              <div className="background"
-                onMouseLeave={this.onMouseLeave}
-              ></div>
+              <video autoPlay ref={this.videoFeed} />
+              {Object.keys(VIDEO_LINKS).map(this.renderVideo)}
+              <div className="background" onMouseLeave={this.onMouseLeave} />
             <div className="top-bar-container">
               <div className="left-bar-container">
-                <div data-ref="finder" onClick={this.playPhotos} className="icon apple"></div>
-                {/* <div className="topbar-text">Finder</div> */}
+                <div data-ref="finder" onClick={this.playVideo} className="icon apple"></div>
               </div>
               <div className="right-bar-container">
-                <div data-ref="wifi" onClick={this.playPhotos} className="icon wifi"></div>
-                <div data-ref="battery" onClick={this.playPhotos} className="icon battery"></div>
+                <div data-ref="wifi" onClick={this.playVideo} className="icon wifi"></div>
+                <div data-ref="battery" onClick={this.playVideo} className="icon battery"></div>
                 <div className="icon time"></div>
               </div>
             </div>
-            <div className="dashboard-container"
-              onMouseEnter={this.showDashboard}
-              onMouseLeave={this.hideDashboard}
-              ref={this.dashboardRef}>
-              <div data-ref="finder" onClick={this.playPhotos} className="dashboard-icon finder"></div>
-              <div onClick={this.addPopup} className="dashboard-icon safari"></div>
+            <div className="dashboard-container">
+              <div data-ref="finder" onClick={this.playVideo} className="dashboard-icon finder"></div>
+              <div 
+                data-popup={POPUPS.SAFARI}
+                onClick={this.addPopup} className="dashboard-icon safari"></div>
               <div className="dashboard-icon photos" 
                 data-ref="photosOpeningVideo"
-                onClick={this.playPhotos}></div>
-              <div className="right-dashboard">
-
-              </div>
-              <div onClick={this.playPhotos} data-ref="trash" className="trash"></div>
+                data-popup={POPUPS.PHOTOS}
+                onClick={this.addPopup}></div>
+              <div className="right-dashboard"></div>
+              <div onClick={this.playVideo} data-ref="trash" className="dashboard-icon trash"></div>
 
             </div>
             </div>
