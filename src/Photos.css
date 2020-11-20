@@ -14,6 +14,14 @@
     display: flex;
     flex-flow: column;
     align-items: center;
+    opacity: 1;
+    transition: opacity 2s;
+    cursor: pointer;
+}
+
+.hidden-private {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .p-container {
@@ -33,6 +41,10 @@
     border-radius: 5px;
     margin: 2px;
     border-radius: 2px;
+}
+
+.private-container {
+
 }
 
 .queretaro {
@@ -55,6 +67,12 @@
     border-radius: 12px;
 }
 
+.fullscreen-c {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .fullscreen-photo {
     width: 100%;
@@ -73,9 +91,16 @@
 
 .private-container {
     overflow-y: auto;
+    display: flex;
+    justify-content: center;
+
 }
 
 .private-img {
-    width: 100%;
+    width: 200px;
     height: auto;
+    margin: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px #464646;
+    cursor: pointer;
 }

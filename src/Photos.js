@@ -40,13 +40,22 @@ export default class Photos extends React.Component {
     }
 
     renderPhoto = img => (
-        <img src={img} className="private-img" />
+        <img key={img} data-popup={POPUPS.FULLSCREEN} data-img={img} onClick={this.props.addPopup} src={img} className="private-img" />
+    )
+
+
+    renderPrivate = () => (
+        <div className={`i-container p-container ${this.props.isPrivateHidden ? 'hidden-private' : ''}`}
+            data-ref="privateFolderVideo" data-popup={POPUPS.PRIVATE} onClick={this.props.addPopup}>
+                <div data-ref="privateFolderVideo" data-popup={POPUPS.PRIVATE} className="photos-icon folder"></div>
+            <div className="icon-title">Private</div>
+        </div>
     )
 
     renderIcons = () => (
         <div className="photos-container">
             <div className="i-container"
-                data-ref="emptyRoomVideo" data-popup={POPUPS.QUERETARO} onDoubleClick={this.props.addPopup}>
+                data-ref="emptyRoomVideo" data-popup={POPUPS.QUERETARO} onClick={this.props.addPopup}>
                 <div data-ref="emptyRoomVideo" data-popup={POPUPS.QUERETARO} className="icon-container">
                     <div data-ref="emptyRoomVideo" data-popup={POPUPS.QUERETARO} className="photo-container">
                         <div data-ref="emptyRoomVideo" data-popup={POPUPS.QUERETARO} className="photos-icon queretaro"></div>
@@ -56,7 +65,7 @@ export default class Photos extends React.Component {
             </div>
 
             <div className="i-container"
-                data-ref="treeVideo" data-popup={POPUPS.TREE} onDoubleClick={this.props.addPopup}>
+                data-ref="treeVideo" data-popup={POPUPS.TREE} onClick={this.props.addPopup}>
                 <div data-ref="treeVideo" data-popup={POPUPS.TREE} className="icon-container">
                     <div data-ref="treeVideo" data-popup={POPUPS.TREE} className="photo-container">
                         <div data-ref="treeVideo" data-popup={POPUPS.TREE} className="photos-icon tree"></div>
@@ -64,22 +73,44 @@ export default class Photos extends React.Component {
                 </div>
                 <div className="icon-title">tree</div>
             </div>
-
-            <div className="i-container p-container"
-                data-ref="privateFolderVideo" data-popup={POPUPS.PRIVATE} onDoubleClick={this.props.addPopup}>
-
-                        <div data-ref="privateFolderVideo" data-popup={POPUPS.PRIVATE} className="photos-icon folder"></div>
-
-                <div className="icon-title">Private</div>
-            </div>
+            {this.renderPrivate()}
         </div>
     )
+
+    renderBody = () => {
+        switch (this.props.type) {
+            case POPUPS.PHOTOS:
+                return this.renderIcons()
+            case POPUPS.FULLSCREEN:
+                return this.renderFullscreen()
+            default:
+                return this.renderPhotos()
+        }
+    }
+
+    renderFullscreen = () => (
+        <div className="fullscreen-c">
+            <img src={this.props.image} className="fullscreen-img" />
+        </div>
+    )
+
+    onDragStart = ev => {
+        this.props.setDragging(true)
+
+    }
+
+    onDragStop = ev => {
+        this.props.setDragging(false)
+    }
+
 
     render() {
         return (
             <Draggable 
                 handle=".top-bar"
-                bounds="html">
+                bounds="html"
+                onStart={this.onDragStart}
+                onStop={this.onDragStop}>
                 <div 
                     style={{
                         top: this.state.top
@@ -93,7 +124,7 @@ export default class Photos extends React.Component {
                     </div>
                     <div className="title-header">{this.props.type}</div>
                 </div>
-                {this.props.type === POPUPS.PHOTOS ? this.renderIcons() : this.renderPhotos()}
+                {this.renderBody()}
                 </div>
             </Draggable>
         )

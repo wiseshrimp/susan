@@ -45,7 +45,7 @@ a:hover {
 }
 
 .avatar-video {
-  z-index: 2;
+  z-index: 4;
   pointer-events: none;
   position: absolute;
   top: 0;
@@ -98,6 +98,10 @@ div > #defaultCanvas0 {
   pointer-events: none;
 }
 
+body {
+  overflow: hidden;
+}
+
 /* Desktop */
 .background {
   background-image: url('./assets/mojave_day.jpg');
@@ -105,10 +109,10 @@ div > #defaultCanvas0 {
   background-size: cover;
   background-position-x: center;
   background-position-y: center;
-  height: 100%;
+  height: 100vh;
   width: 100vw;
   left: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   /* background-image: url('https://d7hftxdivxxvm.cloudfront.net/?resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=1200&quality=80'); */
 }
@@ -553,16 +557,16 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
 }
 
 .dashboard-container {
-  bottom: 0;
+  bottom: -5px;
   height: 85px;
   background-color: #8787879c;
-  width: 330px;
-  left: calc(50vw - 165px);
+  width: 350px;
+  left: calc(50vw - 175px);
   border-radius: 5px;
   box-shadow: 0px 0px 10px #212121cf;
   display: flex;
   justify-content: space-around;
-  z-index: 2;
+  z-index: 4;
   position: absolute;
   transition: opacity 1s;
 }
@@ -602,6 +606,15 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   margin: 3px 8px;
 }
 
+.zoom {
+  background-image: url('./assets/zoom1.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 64px;
+  width: 62px;
+  margin: 3px 8px;
+}
+
 .safari {
   background-image: url('./assets/safari.png');
   background-size: contain;
@@ -627,4 +640,9 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   height: 70px;
   width: 70px;
   margin: 5px 8px;
+}
+
+.video-feed {
+  height: 60vh;
+  width: auto;
 }

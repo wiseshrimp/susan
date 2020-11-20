@@ -1,10 +1,12 @@
 import React from 'react'
 import Sketch from 'react-p5'
 
+import Clock from './Clock'
 import Popup from './Popup'
 import Photos from './Photos'
 import {POPUPS, VIDEOS, VIDEO_LINKS} from './constants'
 import './App.css'
+
 import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
@@ -16,6 +18,8 @@ const AVATAR_PHOTOS = [
   Selfie3,
   Selfie2
 ]
+
+let isDev = true
 
 class Desktop extends React.Component {
   constructor(props) {
@@ -33,6 +37,10 @@ class Desktop extends React.Component {
     this.wifi = React.createRef()
     this.finder = React.createRef()
     this.trash = React.createRef()
+    this.safariOpening = React.createRef()
+    this.safariWork = React.createRef()
+    this.safariWorkEnd = React.createRef()
+    this.safariBing = React.createRef()
 
     this.state = {
       popups: [],
@@ -42,7 +50,12 @@ class Desktop extends React.Component {
       endClient: [null, null],
       startClient:[null, null],
       isLoading: false,
-      images: []
+      isPrivateHidden: false,
+      images: [],
+      isFirstScreen: isDev ? false : true,
+      isPlayingOpening: false,
+      fullscreen: '',
+      isDraggingScreen: false
     }
   }
 
@@ -64,8 +77,27 @@ class Desktop extends React.Component {
     }
   }
 
+  setDragging = isDraggingScreen => {
+    this.setState({
+      isDraggingScreen
+    })
+  }
+
   addPopup = ev => {
-    if (this.state.popups.includes(ev.target.dataset.popup)) return
+    if (this.state.popups.includes(ev.target.dataset.popup)) {
+      if (ev.target.dataset.popup === POPUPS.FULLSCREEN) {
+        this.setState({
+          fullscreen: ev.target.dataset.img
+        })
+      } else return
+    }
+    if (ev.target.dataset.popup === POPUPS.FULLSCREEN) {
+      this.setState({
+        fullscreen: ev.target.dataset.img,
+        popups: [...this.state.popups, ev.target.dataset.popup]
+      })
+      return
+    }
     this.setState({
       popups: [...this.state.popups, ev.target.dataset.popup]
     })
@@ -105,39 +137,49 @@ class Desktop extends React.Component {
         images: [...this.state.images, img.src]
       })
     }
-
-
   }
 
-  closePopup = popup => {
+  closePopup = (popup, isWork = false) => {
+    if (this.state.activeVideo) {
+      if (popup !== POPUPS.FULLSCREEN) 
+        this.resetVideo(this.state.activeVideo)
+    }
+    
     if (popup === POPUPS.QUERETARO) {
       this.playVideo(VIDEOS.endEmptyRoomVideo, false)
     }
     else if (popup === POPUPS.PRIVATE) {
       this.playVideo(VIDEOS.endPrivateVideo, false)
     }
-    else if (this.state.activeVideo) {
-      this.resetVideo(this.state.activeVideo)
+    else if (isWork) {
+      this.playVideo(VIDEOS.safariWorkEnd, false)
+    } else {
+      let idx = this.state.popups.findIndex(p => p === popup)
+      let popups = this.state.popups.slice()
+      popups.splice(idx, 1)
+      this.setState({
+        popups,
+        activeVideo: null
+      })
+      return
     }
     let idx = this.state.popups.findIndex(p => p === popup)
     let popups = this.state.popups.slice()
     popups.splice(idx, 1)
     this.setState({
-      popups,
-      activeVideo: null
+      popups
     })
   }
 
-
   onDrag = ev => {
-    if (!this.state.isDragging) return
+    if (!this.state.isDragging || this.state.isDraggingScreen) return
     this.setState({
       endClient: [ev.clientX, ev.clientY]
     })
   }
 
   onDragEnd = ev => {
-    if (!this.state.isDragging) return
+    if (!this.state.isDragging || this.state.isDraggingScreen) return
     document.removeEventListener('mousemove', this.onDrag)
     document.removeEventListener('mouseup', this.onDragEnd)
 
@@ -149,12 +191,6 @@ class Desktop extends React.Component {
   }
 
   onDragStart = ev => {
-    if (!this.state.hasLoaded && this.state.isVideoLoaded) {
-      this.setState({
-        hasLoaded: true,
-      })
-      this.playVideo(VIDEOS.openingVideo, false)
-    }
     document.addEventListener('mousemove', this.onDrag)
     document.addEventListener('mouseup', this.onDragEnd)
     this.setState({
@@ -166,7 +202,7 @@ class Desktop extends React.Component {
 
   onMouseLeave = ev => {
     ev.persist()
-    if (!this.state.isDragging)
+    if (!this.state.isDragging || this.state.isDraggingScreen)
       return
     if (ev.clientX > window.innerWidth || ev.clientX < 0 || ev.clientY > window.innerHeight || ev.clientY < 0) {
       this.setState({
@@ -189,7 +225,7 @@ class Desktop extends React.Component {
       p5.resizeCanvas(window.innerWidth, window.innerHeight)
     }
     p5.clear()
-    if (this.state.isDragging) {
+    if (this.state.isDragging && !this.state.isDraggingScreen) {
       this.drawDragRect(p5)
     }
   }
@@ -226,6 +262,7 @@ class Desktop extends React.Component {
     }
 
     let ref = isEl ? ev.target.dataset.ref : ev
+
     if (!this[ref] || !this[ref].current) return
     this[ref].current.classList.remove('hidden-video')
     this[ref].current.classList.add('avatar-video')
@@ -257,7 +294,7 @@ class Desktop extends React.Component {
       p5.resizeCanvas(window.innerWidth, window.innerHeight)
     }
     p5.clear()
-    if (this.state.isDragging) {
+    if (this.state.isDragging && !this.state.isDraggingScreen) {
       this.drawDragRect(p5)
     }
   }
@@ -278,6 +315,20 @@ class Desktop extends React.Component {
     ev.target.currentTime = 0
     ev.target.pause()
 
+    if (ev.target.dataset.ref === VIDEOS.endPrivateVideo) {
+      this.setState({
+        isPrivateHidden: true
+      })
+    }
+
+    if (ev.target.dataset.ref === VIDEOS.openingVideo) {
+      this.setState({
+        activeVideo: null,
+        isPlayingOpening: false
+      })
+      return
+    }
+
     this.setState({
       activeVideo: null
     })
@@ -285,16 +336,37 @@ class Desktop extends React.Component {
 
   renderPopup = (type, idx) => {
     switch (type) {
+      case POPUPS.CLOCK:
+        return <Clock
+          setDragging={this.setDragging}
+          closePopup={this.closePopup} />
       case POPUPS.SAFARI:
-        return <Popup closePopup={this.closePopup} />
+        return <Popup 
+          key={`${type}-${idx}`} 
+          setDragging={this.setDragging}
+          playVideo={this.playVideo}
+          closePopup={this.closePopup} />
+      case POPUPS.FULLSCREEN:
+        return <Photos 
+          key={`${type}-${idx}`}
+          type={type}
+          setDragging={this.setDragging}
+          image={this.state.fullscreen}
+          setDragging={this.setDragging}
+          closePopup={this.closePopup}
+        />
       default:
         return <Photos 
           key={`${type}-${idx}`}
           type={type}
+          isPrivateHidden={this.state.isPrivateHidden}
           images={type === POPUPS.PRIVATE ? this.state.images : []}
           addPopup={this.addPopup}  
+          setDragging={this.setDragging}
           closePopup={this.closePopup}
-          playVideo={this.playVideo} />
+          playVideo={this.playVideo}
+          setDragging={this.setDragging}
+          setFullscreen={this.setFullscreen} />
     }
   }
 
@@ -306,7 +378,7 @@ class Desktop extends React.Component {
 
   renderVideo = (key, idx) => (
     <video className="hidden-video" 
-      key={key}
+      key={`${key}-${idx}`}
       width="500px" height="500px" 
       type="video/webm"  
       ref={this[key]}
@@ -316,42 +388,74 @@ class Desktop extends React.Component {
       src={VIDEO_LINKS[key]} />
   )
 
+  renderFirstScreen = () => (
+    <div>
+      <div className="background"></div>
+      {this.state.isPlayingOpening ? null : <Popup 
+        hasLoaded={this.state.isVideoLoaded}
+        playOpening={this.playOpening} 
+        setDragging={this.setDragging}
+        isInstructions={true} />}
+    </div>
+  )
+
+  playOpening = () => {
+    this.playVideo(VIDEOS.openingVideo, false)
+    this.setState({
+      isFirstScreen: false,
+      isPlayingOpening: true
+    })
+  }
+
+  setFullscreen = img => {
+    this.setState({
+      fullscreen: img
+    })
+  }
+
+  renderMain = () => (
+    <div>
+      <Sketch setup={this.setup} draw={this.draw} />
+      <div>
+        {this.state.popups.map(this.renderPopup)}
+        <div className="os-container">
+          <div className="background" onMouseLeave={this.onMouseLeave} />
+        <div className="top-bar-container">
+          <div className="left-bar-container">
+            <div data-ref="finder" onClick={this.playVideo} className="icon apple"></div>
+          </div>
+          <div className="right-bar-container">
+            <div data-ref="wifi" onClick={this.playVideo} className="icon wifi"></div>
+            <div data-ref="battery" onClick={this.playVideo} className="icon battery"></div>
+            <div className="icon time" data-popup={POPUPS.CLOCK} onClick={this.addPopup}></div>
+          </div>
+        </div>
+        <div className="dashboard-container">
+          <div data-ref="finder" onClick={this.playVideo} className="dashboard-icon finder"></div>
+          <div 
+            data-popup={POPUPS.SAFARI}
+            onClick={this.addPopup} data-ref="safariOpening" className="dashboard-icon safari"></div>
+          <div className="dashboard-icon photos" 
+            data-ref="photosOpeningVideo"
+            data-popup={POPUPS.PHOTOS}
+            onClick={this.addPopup}></div>
+          <div data-ref="zoom" onClick={this.playVideo} className="dashboard-icon zoom"></div>
+          <div className="right-dashboard"></div>
+          <div onClick={this.playVideo} data-ref="trash" className="dashboard-icon trash"></div>
+
+        </div>
+        </div>
+      </div>
+    </div>
+  )
+
   render() {
     return (
       <div>
-        <Sketch setup={this.setup} draw={this.draw} />
-          <div>
-            {this.state.popups.map(this.renderPopup)}
-            <div className="os-container">
-              <video autoPlay ref={this.videoFeed} />
-              {Object.keys(VIDEO_LINKS).map(this.renderVideo)}
-              <div className="background" onMouseLeave={this.onMouseLeave} />
-            <div className="top-bar-container">
-              <div className="left-bar-container">
-                <div data-ref="finder" onClick={this.playVideo} className="icon apple"></div>
-              </div>
-              <div className="right-bar-container">
-                <div data-ref="wifi" onClick={this.playVideo} className="icon wifi"></div>
-                <div data-ref="battery" onClick={this.playVideo} className="icon battery"></div>
-                <div className="icon time"></div>
-              </div>
-            </div>
-            <div className="dashboard-container">
-              <div data-ref="finder" onClick={this.playVideo} className="dashboard-icon finder"></div>
-              <div 
-                data-popup={POPUPS.SAFARI}
-                onClick={this.addPopup} className="dashboard-icon safari"></div>
-              <div className="dashboard-icon photos" 
-                data-ref="photosOpeningVideo"
-                data-popup={POPUPS.PHOTOS}
-                onClick={this.addPopup}></div>
-              <div className="right-dashboard"></div>
-              <div onClick={this.playVideo} data-ref="trash" className="dashboard-icon trash"></div>
-
-            </div>
-            </div>
-          </div>
-        </div>
+        <video className="video-feed" autoPlay ref={this.videoFeed} />
+        {Object.keys(VIDEO_LINKS).map(this.renderVideo)}
+        {this.state.isFirstScreen | this.state.isPlayingOpening ? this.renderFirstScreen() : this.renderMain()}
+      </div>
     )
   }
 }
