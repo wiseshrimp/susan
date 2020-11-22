@@ -1,0 +1,36 @@
+.update-container {
+    width: 250px;
+    height: 150px;
+    font-size: 13px;
+    transition: all 1s;
+}
+
+.update-text {
+    width: 100%;
+}
+
+.update-body {
+    text-align: center;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.update-button {
+    border: 1px solid #616161;
+    padding: 2px 10px;
+    border-radius: 30px;
+    background-color: #ffffff;
+    color: #616161;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s all;
+}
+
+.update-button:hover {
+    background-color: #616161;
+    color: #ffffff;
+}

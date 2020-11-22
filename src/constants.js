@@ -13,8 +13,21 @@ const VIDEOS = {
     safariOpening: 'safariOpening',
     safariWork: 'safariWork',
     safariWorkEnd: 'safariWorkEnd',
-    safariBing: 'safariBing'
+    safariBing: 'safariBing',
+    updateNotification0: 'updateNotification0',
+    updateNotification1: 'updateNotification1',
+    updateNotification2: 'updateNotification2',
+    updateNotification3: 'updateNotification3',
+    preUpdate: 'preUpdate'
   }
+
+  const UPDATE_VIDEOS = [
+    VIDEOS.updateNotification0,
+    VIDEOS.updateNotification1,
+    VIDEOS.updateNotification2,
+    VIDEOS.updateNotification3,
+    VIDEOS.preUpdate
+  ]
   
   const POPUPS = {
     PHOTOS: 'Photos',
@@ -41,7 +54,12 @@ const VIDEOS = {
     safariOpening: "https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Safari_Opening.webm",
     safariWork: "https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Safari_Work.webm",
     safariWorkEnd: "https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Safari_WorkEnd.webm",
-    safariBing: "https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Safari_Bing.webm"
+    safariBing: "https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Safari_Bing.webm",
+    updateNotification0: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification0.webm',
+    updateNotification1: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification1.webm',
+    updateNotification2: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification2.webm',
+    updateNotification3: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification3.webm',
+    preUpdate: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/PreUpdate.webm'
   }
 
-  export {VIDEOS, POPUPS, VIDEO_LINKS}
+  export {VIDEOS, POPUPS, VIDEO_LINKS, UPDATE_VIDEOS}

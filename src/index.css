@@ -44,14 +44,33 @@ a:hover {
   margin: 15px 0;
 }
 
+#root {
+  background-color: black;
+  top: 0;
+  left: 0;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+}
+
+.video-parent {
+  overflow: hidden;
+}
+
+.desktop {
+  transition: all 5s;
+}
+
 .avatar-video {
   z-index: 4;
   pointer-events: none;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: auto;
+  height: 100%;
+  width: 177.77777778vh; /* 100 * 16 / 9 */
+  min-width: 100%;
+  min-height: 56.25vw; /* 100 * 9 / 16 */
   transition: opacity 1s ease-in-out;
 }
 
@@ -480,6 +499,8 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   z-index: 2;
   padding: 0 10px;
   display: flex;
+  height: 30px;
+  align-items: center;
 }
 
 .right-bar-container {
@@ -497,8 +518,8 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   background-image: url('./assets/apple.png');
   background-size: contain;
   background-repeat: no-repeat;
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   margin: 3px 15px;
   cursor: pointer;
 }
@@ -507,8 +528,8 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   background-image: url('./assets/clock.png');
   background-size: contain;
   background-repeat: no-repeat;
-  height: 15px;
-  width: 15px;
+  height: 18px;
+  width: 18px;
   margin: 3px 8px;
   cursor: pointer;
 }
@@ -517,8 +538,8 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   background-image: url('./assets/wifi.png');
   background-size: contain;
   background-repeat: no-repeat;
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   margin: 3px 8px;
   cursor: pointer;
 }
@@ -527,8 +548,8 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   background-image: url('./assets/battery.png');
   background-size: contain;
   background-repeat: no-repeat;
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   margin: 3px 8px;
   cursor: pointer;
 }
@@ -645,4 +666,19 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
 .video-feed {
   height: 60vh;
   width: auto;
+}
+
+.bump {
+  animation: Bump 1s ease-in-out infinite;
+  bottom: 0;
+  position: relative;
+}
+
+@keyframes Bump {
+  0%, 100% {
+    bottom: 0;
+  }
+  50% {
+    bottom: 20px;
+  }
 }
