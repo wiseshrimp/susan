@@ -8,14 +8,14 @@ import Clock from './Clock'
 import Popup from './Popup'
 import Photos from './Photos'
 import Update from './Update'
-import {POPUPS, VIDEOS, VIDEO_LINKS, UPDATE_VIDEOS} from './constants'
+import {POPUPS, VIDEOS, VIDEO_LINKS, UPDATE_VIDEOS, SOUNDS} from './constants'
 import './App.css'
 
 import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = .1
+let NUM_OF_MINUTES = 2
 
  
 const AVATAR_PHOTOS = [
@@ -56,8 +56,12 @@ class Desktop extends React.Component {
     this.endingSequence = React.createRef()
     this.preUpdate = React.createRef()
     this.glitchOverlay = React.createRef()
+    this.startup = React.createRef()
+    this.notification = React.createRef()
+    this.newSusan = React.createRef()
 
     this.updateInterval = null
+    this.timeInterval = null
 
     this.state = {
       popups: [],
@@ -79,14 +83,19 @@ class Desktop extends React.Component {
       hasUpdated: false,
       isPlayingClosing: false,
       isMobile:  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-      isChrome: /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+      isChrome: /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor),
+      minutes: NUM_OF_MINUTES,
+      seconds: 0
     }
   }
 
   componentDidMount() {
     document.addEventListener('mousedown', this.onDragStart)
     window.addEventListener('resize', this.onResize)
-    setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
+    if (isDev) {
+      setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
+      this.timeInterval = setInterval(this.updateTime, 1000)
+    }
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
@@ -100,6 +109,25 @@ class Desktop extends React.Component {
           console.log(err0r) // TO DO: Popup error about webcam
         })
     }
+
+  }
+
+  updateTime = ev => {
+    let minutes, seconds
+    if (!this.state.seconds && !this.state.minutes) {
+      clearInterval(this.timeInterval)
+      return
+    } else if(!this.state.seconds) {
+      minutes = this.state.minutes - 1
+      seconds = 59
+    } else {
+      minutes = this.state.minutes
+      seconds = this.state.seconds - 1
+    }
+    this.setState({
+      minutes,
+      seconds
+    })
   }
 
   addUpdate = ev => {
@@ -107,6 +135,8 @@ class Desktop extends React.Component {
       setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
       return
     }
+    if (!this.notification.current) return
+    this.notification.current.play()
     let id = Date.now()
     this.setState({
       updates: [...this.state.updates, 
@@ -345,6 +375,12 @@ class Desktop extends React.Component {
       hasUpdated: true
     })
     this.desktop.current.style.opacity = 1
+    this.startup.current.play()
+    setTimeout(this.introduceNewSusan, 2000)
+  }
+
+  introduceNewSusan = ev => {
+    this.playVideo(VIDEOS.newSusan, false)
   }
 
   playVideo = (ev, isEl = true) => {
@@ -443,6 +479,14 @@ class Desktop extends React.Component {
       return
     }
 
+    if (ev.target.dataset.ref === VIDEOS.newSusan) {
+      this.setState({
+        activeVideo: null
+      })
+      this.desktop.current.style.opacity = 0
+      return
+    }
+
     if (ev.target.dataset.ref === VIDEOS.endPrivateVideo) {
       this.setState({
         activeVideo: null,
@@ -456,6 +500,8 @@ class Desktop extends React.Component {
         activeVideo: null,
         isPlayingOpening: false
       })
+      this.startup.current.play()
+      this.timeInterval = setInterval(this.updateTime, 1000)
       return
     }
 
@@ -545,6 +591,16 @@ class Desktop extends React.Component {
     })
   }
 
+  renderTime = () => {
+    let {minutes, seconds} = this.state
+    minutes = minutes.toString()
+    seconds = seconds.toString().length === 1 ? `0${seconds.toString()}` : seconds.toString()
+  
+    return (
+    <div className="time-text">{minutes}:{seconds}</div>
+    )
+  }
+
   renderUpdates = update => update.component
 
   renderMain = () => (
@@ -566,6 +622,7 @@ class Desktop extends React.Component {
             <div data-ref="wifi" onClick={this.playVideo} className="icon wifi"></div>
             <div data-ref="battery" onClick={this.playVideo} className="icon battery"></div>
             <div className="icon time" data-popup={POPUPS.CLOCK} onClick={this.addPopup}></div>
+            <div className="time-text">{this.renderTime()}</div>
           </div>
         </div>
         <div className={`dashboard-container ${this.state.isPlayingClosing || this.state.hasUpdated ? 'invisible' : ''}`}>
@@ -587,10 +644,17 @@ class Desktop extends React.Component {
     </div>
   )
 
+  renderSound = sound => (
+    <audio ref={this[sound.name]}>
+      <source src={sound.sound} type={`audio/${sound.type}`} />
+    </audio>
+  )
+
   renderWeb = () => (
     <GlitchClip disabled={!this.state.isGlitching}>
       {this.state.isGlitching ? null : <video className="video-feed" autoPlay ref={this.videoFeed} />}
       {Object.keys(VIDEO_LINKS).map(this.renderVideo)}
+      {SOUNDS.map(this.renderSound)}
       {this.state.isFirstScreen | this.state.isPlayingOpening ? this.renderFirstScreen() : this.renderMain()}
     </GlitchClip>
   )

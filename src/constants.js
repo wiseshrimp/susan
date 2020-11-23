@@ -1,3 +1,19 @@
+import Startup from './assets/sounds/startup.wav'
+import Notification from './assets/sounds/notification.ogg'
+
+const SOUNDS = [
+  {
+    name: 'startup',
+    sound: Startup,
+    type: 'wav'
+  },
+  {
+    name: 'notification',
+    sound: Notification,
+    type: 'ogg'
+  }
+]
+
 const VIDEOS = {
     openingVideo: 'openingVideo',
     photosOpeningVideo: 'photosOpeningVideo',
@@ -19,7 +35,8 @@ const VIDEOS = {
     updateNotification2: 'updateNotification2',
     updateNotification3: 'updateNotification3',
     preUpdate: 'preUpdate',
-    endingSequence: 'endingSequence'
+    endingSequence: 'endingSequence',
+    newSusan: 'newSusan'
   }
 
   const UPDATE_VIDEOS = [
@@ -28,7 +45,8 @@ const VIDEOS = {
     VIDEOS.updateNotification2,
     VIDEOS.updateNotification3,
     VIDEOS.preUpdate,
-    VIDEOS.endingSequence
+    VIDEOS.endingSequence,
+    VIDEOS.newSusan
   ]
   
   const POPUPS = {
@@ -62,7 +80,8 @@ const VIDEOS = {
     updateNotification2: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification2.webm',
     updateNotification3: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification3.webm',
     preUpdate: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/PreUpdate.webm',
-    endingSequence: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Updating_Glitch.webm'
+    endingSequence: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Updating_Glitch.webm',
+    newSusan: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/New_Susan.webm'
   }
 
-  export {VIDEOS, POPUPS, VIDEO_LINKS, UPDATE_VIDEOS}
+  export {VIDEOS, POPUPS, VIDEO_LINKS, UPDATE_VIDEOS, SOUNDS}
