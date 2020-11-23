@@ -615,3 +615,20 @@ iframe {
 .bing-icon {
     background-color: #d1b7ff;
 }
+
+.instructions-body {
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    line-height: 30px;
+}
+
+.instructions-container {
+    width: 100%;
+}
+
+.continue-button {
+    margin: 20px;
+}

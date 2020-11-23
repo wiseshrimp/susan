@@ -18,7 +18,8 @@ const VIDEOS = {
     updateNotification1: 'updateNotification1',
     updateNotification2: 'updateNotification2',
     updateNotification3: 'updateNotification3',
-    preUpdate: 'preUpdate'
+    preUpdate: 'preUpdate',
+    endingSequence: 'endingSequence'
   }
 
   const UPDATE_VIDEOS = [
@@ -26,7 +27,8 @@ const VIDEOS = {
     VIDEOS.updateNotification1,
     VIDEOS.updateNotification2,
     VIDEOS.updateNotification3,
-    VIDEOS.preUpdate
+    VIDEOS.preUpdate,
+    VIDEOS.endingSequence
   ]
   
   const POPUPS = {
@@ -59,7 +61,8 @@ const VIDEOS = {
     updateNotification1: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification1.webm',
     updateNotification2: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification2.webm',
     updateNotification3: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification3.webm',
-    preUpdate: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/PreUpdate.webm'
+    preUpdate: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/PreUpdate.webm',
+    endingSequence: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Updating_Glitch.webm'
   }
 
   export {VIDEOS, POPUPS, VIDEO_LINKS, UPDATE_VIDEOS}

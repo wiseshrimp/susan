@@ -58,7 +58,7 @@ export default class Update extends React.Component {
                 style={{
                     top: this.state.top, 
                     left: this.state.left,
-                    pointerEvents: this.props.willDisappear ? 'none' : 'all'
+                    pointerEvents: this.props.willDisappear || this.props.isUpdating ? 'none' : 'all'
                 }}
                     className="window popup update-container" >
                     <div className="top-bar">

@@ -43,6 +43,24 @@ export default class Popup extends React.Component {
         this.props.closePopup(this.props.type, this.state.type === 'work')
     }
 
+    renderInstructionsBody = () => (
+        <div>
+            <div className="instructions-text">
+                Welcome to your computer.<br />
+                        Come do whatever you would normally do: look at photos, browse the internet, whatever your heart desires.
+                    </div>
+            {this.props.hasLoaded ? <button className="continue-button" onClick={this.props.playOpening}>Continue</button> : null}
+        </div>
+    )
+
+    renderFail = () => (
+        <div>
+            <div className="instructions-text">
+                Hello!<br/>Currently, Susan only works on Google Chrome and on desktop. Please come again soon!
+            </div>
+        </div>
+    )
+
     renderInstructions = () => (
         <div className="window popup">
             <div className="top-bar">
@@ -53,8 +71,10 @@ export default class Popup extends React.Component {
                 </div>
             </div>
             <div className="instructions-body">
-                Welcome!
-            {this.props.hasLoaded ? <button className="continue-button" onClick={this.props.playOpening}>Continue</button> : null}
+                <div className="instructions-container">
+                    {this.props.isFail ? this.renderFail() : this.renderInstructionsBody()}
+                </div>
+
             </div>
         </div>
     )

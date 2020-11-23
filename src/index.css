@@ -51,10 +51,16 @@ a:hover {
   position: absolute;
   height: 100vh;
   width: 100vw;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;    
 }
 
 .video-parent {
   overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 }
 
 .desktop {
@@ -64,14 +70,15 @@ a:hover {
 .avatar-video {
   z-index: 4;
   pointer-events: none;
-  position: absolute;
-  top: 0;
-  left: 0;
   height: 100%;
   width: 177.77777778vh; /* 100 * 16 / 9 */
   min-width: 100%;
   min-height: 56.25vw; /* 100 * 9 / 16 */
   transition: opacity 1s ease-in-out;
+  position: absolute;
+  left: 50%; /* % of surrounding element */
+  top: 50%;
+  transform: translate(-50%, -50%); /* % of current element */
 }
 
 .hidden-video {
@@ -681,4 +688,22 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   50% {
     bottom: 20px;
   }
+}
+
+.invisible {
+  display: none;
+}
+
+.newbackground {
+  background-image: url('./assets/elcapitan.jpg');
+  /* background-color: #d8d8d8;   */
+  background-size: cover;
+  background-position-x: center;
+  background-position-y: center;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  position: fixed;
+  top: 0;
+  /* background-image: url('https://d7hftxdivxxvm.cloudfront.net/?resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=1200&quality=80'); */
 }

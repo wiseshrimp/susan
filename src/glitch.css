@@ -6,7 +6,7 @@
     left: 0;
 }
 
-.desktop {
+.glitch-background {
     height: 100vh;
     width: 100vw;
     top: 0;
@@ -15,6 +15,7 @@
     background-image: url('./assets/glitch_background.gif');
     background-size: cover;
     background-repeat: no-repeat;
+    opacity: 0;
 }
 
 @keyframes glitch-effect {

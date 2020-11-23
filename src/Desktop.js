@@ -15,6 +15,8 @@ import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
+let NUM_OF_MINUTES = .1
+
  
 const AVATAR_PHOTOS = [
   Selfie1,
@@ -51,7 +53,9 @@ class Desktop extends React.Component {
     this.updateNotification1 = React.createRef()
     this.updateNotification2 = React.createRef()
     this.updateNotification3 = React.createRef()
+    this.endingSequence = React.createRef()
     this.preUpdate = React.createRef()
+    this.glitchOverlay = React.createRef()
 
     this.updateInterval = null
 
@@ -73,6 +77,7 @@ class Desktop extends React.Component {
       isGlitching: false,
       updateCount: 0,
       hasUpdated: false,
+      isPlayingClosing: false,
       isMobile:  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
       isChrome: /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
     }
@@ -81,6 +86,7 @@ class Desktop extends React.Component {
   componentDidMount() {
     document.addEventListener('mousedown', this.onDragStart)
     window.addEventListener('resize', this.onResize)
+    setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
@@ -89,7 +95,6 @@ class Desktop extends React.Component {
           setTimeout(this.takePhoto, 15000)
           setTimeout(this.takePhoto, 20000)
           setTimeout(this.takePhoto, 30000) // TO DO: Stop camera after taking last photo
-          setTimeout(this.addUpdate, 5000)
         })
         .catch(function (err0r) {
           console.log(err0r) // TO DO: Popup error about webcam
@@ -98,12 +103,21 @@ class Desktop extends React.Component {
   }
 
   addUpdate = ev => {
+    if (this.state.isFirstScreen) {
+      setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
+      return
+    }
     let id = Date.now()
     this.setState({
       updates: [...this.state.updates, 
         {
           id,
-          component: <Update id={id} idx={id} update={this.updateDesktop} willDisappear={this.state.updateCount < 4} setDragging={this.setDragging} />
+          component: <Update 
+            id={id} 
+            idx={id} 
+            update={this.updateDesktop} 
+            isUpdating={this.state.isPlayingClosing}
+            willDisappear={this.state.updateCount < 4} setDragging={this.setDragging} />
         }
       ]
     })
@@ -113,7 +127,20 @@ class Desktop extends React.Component {
   }
 
   updateDesktop = ev => {
+    if (this.state.isPlayingClosing) return
     this.desktop.current.style.opacity = 0
+    clearInterval(this.updateInterval)
+    this.setState({
+      isGlitching: false,
+      isPlayingClosing: true,
+      popups: []
+    })
+    setTimeout(this.playClosingSequence, 6000)
+  }
+
+  playClosingSequence = ev => {
+    this.desktop.current.style.opacity = 1
+    this.playVideo(VIDEOS.endingSequence, false)
   }
 
   setDragging = isDraggingScreen => {
@@ -180,8 +207,9 @@ class Desktop extends React.Component {
   }
 
   closePopup = (popup, isWork = false) => {
+
     if (this.state.activeVideo) {
-      if (popup !== POPUPS.FULLSCREEN) 
+      if (popup !== POPUPS.FULLSCREEN && !UPDATE_VIDEOS.includes(this.state.activeVideo) )
         this.resetVideo(this.state.activeVideo)
     }
     
@@ -193,19 +221,33 @@ class Desktop extends React.Component {
     }
     else if (isWork) {
       this.playVideo(VIDEOS.safariWorkEnd, false)
-    } else {
+    } 
+    else {
       let idx = this.state.popups.findIndex(p => p === popup)
       let popups = this.state.popups.slice()
       popups.splice(idx, 1)
+      if (UPDATE_VIDEOS.includes(this.state.activeVideo)) {
+        this.setState({
+          popups
+        })
+        return
+      }
       this.setState({
         popups,
         activeVideo: null
       })
       return
     }
+
     let idx = this.state.popups.findIndex(p => p === popup)
     let popups = this.state.popups.slice()
     popups.splice(idx, 1)
+    if (UPDATE_VIDEOS.includes(this.state.activeVideo)) {
+      this.setState({
+        popups
+      })
+      return
+    }
     this.setState({
       popups
     })
@@ -296,6 +338,15 @@ class Desktop extends React.Component {
     )
   }
 
+  openNewDesktop = ev => {
+    this.setState({
+      updates: [],
+      isPlayingClosing: false,
+      hasUpdated: true
+    })
+    this.desktop.current.style.opacity = 1
+  }
+
   playVideo = (ev, isEl = true) => {
     let ref = isEl ? ev.target.dataset.ref : ev
 
@@ -365,7 +416,8 @@ class Desktop extends React.Component {
 
     if (ev.target.dataset.ref.includes('updateNotification')) {
       if (this.state.updateCount === 3) {
-        setInterval(this.addUpdate, 700)
+        this.glitchOverlay.current.style.opacity = 1
+        this.updateInterval = setInterval(this.addUpdate, 700)
         this.playVideo(VIDEOS.preUpdate, false)
         this.setState({
           updateCount: this.state.updateCount + 1,
@@ -379,6 +431,15 @@ class Desktop extends React.Component {
         updateCount: this.state.updateCount + 1,
         activeVideo: null
       })
+      return
+    }
+
+    if (ev.target.dataset.ref === VIDEOS.endingSequence) {
+      this.setState({
+        activeVideo: null
+      })
+      setTimeout(this.openNewDesktop, 5000)
+      this.desktop.current.style.opacity = 0
       return
     }
 
@@ -488,15 +549,16 @@ class Desktop extends React.Component {
 
   renderMain = () => (
     <div>
-      <Sketch setup={this.setup} draw={this.draw} />
+      {this.state.isPlayingClosing ? null : <Sketch setup={this.setup} draw={this.draw} />}
+      <div ref={this.glitchOverlay} className={`glitch-background ${this.state.isPlayingClosing || this.state.hasUpdated ? 'invisible' : ''}`}></div>
       <div>
         {this.state.popups.map(this.renderPopup)}
         {this.state.updates.map(this.renderUpdates)}
         <div className="os-container">
           <GlitchClip disabled={!this.state.isGlitching}>
-            <div className="background" onMouseLeave={this.onMouseLeave} />
+            <div className={`background ${this.state.isPlayingClosing || this.state.hasUpdated ? 'newbackground' : ''} ${this.state.isPlayingClosing ? 'invisible' : ''}`} onMouseLeave={this.onMouseLeave} />
           </GlitchClip>
-        <div className="top-bar-container">
+        <div className={`top-bar-container ${this.state.isPlayingClosing || this.state.hasUpdated ? 'invisible' : ''}`}>
           <div className="left-bar-container">
             <div data-ref="finder" onClick={this.playVideo} className="icon apple"></div>
           </div>
@@ -506,7 +568,7 @@ class Desktop extends React.Component {
             <div className="icon time" data-popup={POPUPS.CLOCK} onClick={this.addPopup}></div>
           </div>
         </div>
-        <div className="dashboard-container">
+        <div className={`dashboard-container ${this.state.isPlayingClosing || this.state.hasUpdated ? 'invisible' : ''}`}>
           <div data-ref="finder" onClick={this.playVideo} className="dashboard-icon finder"></div>
           <div 
             data-popup={POPUPS.SAFARI}
@@ -534,9 +596,11 @@ class Desktop extends React.Component {
   )
 
   renderMobile = () => (
-    <div>
-      Sorry!
-    </div>
+    <Popup hasLoaded={this.state.isVideoLoaded}
+      isFail={this.state.isChrome || this.state.isMobile}
+      playOpening={this.playOpening} 
+      setDragging={this.setDragging}
+      isInstructions={true} />
   )
 
   render() {
