@@ -15,7 +15,7 @@ import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = 2
+let NUM_OF_MINUTES = 9
 
  
 const AVATAR_PHOTOS = [
@@ -25,7 +25,7 @@ const AVATAR_PHOTOS = [
   Selfie2
 ]
 
-let isDev = true
+let isDev = false
 
 
 class Desktop extends React.Component {
@@ -630,7 +630,7 @@ class Desktop extends React.Component {
           <div 
             data-popup={POPUPS.SAFARI}
             onClick={this.addPopup} data-ref="safariOpening" className="dashboard-icon safari"></div>
-          <div className="dashboard-icon photos bump" 
+          <div className="dashboard-icon photos" 
             data-ref="photosOpeningVideo"
             data-popup={POPUPS.PHOTOS}
             onClick={this.addPopup}></div>
