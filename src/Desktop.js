@@ -137,7 +137,6 @@ class Desktop extends React.Component {
 
   addUpdate = ev => {
     if (this.state.isFirstScreen) {
-      setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
       return
     }
     if (!this.notification.current) return
@@ -505,6 +504,8 @@ class Desktop extends React.Component {
         isPlayingOpening: false
       })
       this.startup.current.play()
+      setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
+
       this.timeInterval = setInterval(this.updateTime, 1000)
       return
     }
