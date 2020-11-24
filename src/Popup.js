@@ -65,7 +65,7 @@ export default class Popup extends React.Component {
         <div className="window popup">
             <div className="top-bar">
                 <div className="buttons">
-                    <div onClick={this.close} className="close">
+                    <div className="close">
                         <a className="closebutton"><span><strong>x</strong></span></a>
                     </div>
                 </div>

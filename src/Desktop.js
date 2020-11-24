@@ -15,7 +15,7 @@ import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = 10
+let NUM_OF_MINUTES = 9
 
  
 const AVATAR_PHOTOS = [
@@ -82,7 +82,7 @@ class Desktop extends React.Component {
       hasUpdated: false,
       isPlayingClosing: false,
       isMobile:  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-      isChrome: /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor),
+      isChrome: !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime),
       minutes: NUM_OF_MINUTES,
       seconds: 0
     }
@@ -95,19 +95,27 @@ class Desktop extends React.Component {
       setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
       this.timeInterval = setInterval(this.updateTime, 1000)
     }
+    navigator.getWebcam = (navigator.getUserMedia || navigator.webKitGetUserMedia || navigator.moxGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
     if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true })
+        navigator.mediaDevices.getUserMedia({  video: true })
         .then(stream => {
           this.videoFeed.current.srcObject = stream
           setTimeout(this.takePhoto, 3000)
           setTimeout(this.takePhoto, 15000)
-          setTimeout(this.takePhoto, 20000)
+          setTimeout(this.takePhoto, 20000)        
         })
-        .catch(function (err0r) {
-          console.log(err0r) // TO DO: Popup error about webcam
-        })
+        .catch(function (e) { console.log(e) });
     }
-
+    else {
+    navigator.getWebcam({ video: true }, 
+        stream => {
+          this.videoFeed.current.srcObject = stream
+          setTimeout(this.takePhoto, 3000)
+          setTimeout(this.takePhoto, 15000)
+          setTimeout(this.takePhoto, 20000)
+        }, 
+        function () { console.log('No webcam') });
+    }
   }
 
   updateTime = ev => {
@@ -621,7 +629,7 @@ class Desktop extends React.Component {
           <div className="right-bar-container">
             <div data-ref="wifi" onClick={this.playVideo} className="icon wifi"></div>
             <div data-ref="battery" onClick={this.playVideo} className="icon battery"></div>
-            <div className="icon time" data-popup={POPUPS.CLOCK} onClick={this.addPopup}></div>
+            <div className="icon time" ></div>
             <div className="time-text">{this.renderTime()}</div>
           </div>
         </div>
