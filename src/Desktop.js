@@ -104,17 +104,16 @@ class Desktop extends React.Component {
           setTimeout(this.takePhoto, 15000)
           setTimeout(this.takePhoto, 20000)        
         })
-        .catch(function (e) { console.log(e) });
     }
     else {
-    navigator.getWebcam({ video: true }, 
-        stream => {
-          this.videoFeed.current.srcObject = stream
-          setTimeout(this.takePhoto, 3000)
-          setTimeout(this.takePhoto, 15000)
-          setTimeout(this.takePhoto, 20000)
-        }, 
-        function () { console.log('No webcam') });
+      navigator.getWebcam({ video: true }, 
+          stream => {
+            this.videoFeed.current.srcObject = stream
+            setTimeout(this.takePhoto, 3000)
+            setTimeout(this.takePhoto, 15000)
+            setTimeout(this.takePhoto, 20000)
+          }, 
+          function () { console.log('No webcam') });
     }
   }
 
