@@ -50,6 +50,10 @@ a:hover {
   font-size: small;
 }
 
+.time-text.red {
+  color: red;
+}
+
 #root {
   background-color: black;
   top: 0;
@@ -237,6 +241,10 @@ body {
 
 #blog-btn:after {
   content: 'itp blog';
+}
+
+.continue-button {
+  cursor: pointer;
 }
 
 #about-me-btn:after {

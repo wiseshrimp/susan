@@ -15,14 +15,13 @@ import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = 9
+let NUM_OF_MINUTES = 10
 
  
 const AVATAR_PHOTOS = [
   Selfie1,
   Selfie2,
-  Selfie3,
-  Selfie2
+  Selfie3
 ]
 
 let isDev = false
@@ -103,7 +102,6 @@ class Desktop extends React.Component {
           setTimeout(this.takePhoto, 3000)
           setTimeout(this.takePhoto, 15000)
           setTimeout(this.takePhoto, 20000)
-          setTimeout(this.takePhoto, 30000) // TO DO: Stop camera after taking last photo
         })
         .catch(function (err0r) {
           console.log(err0r) // TO DO: Popup error about webcam
@@ -237,7 +235,6 @@ class Desktop extends React.Component {
   }
 
   closePopup = (popup, isWork = false) => {
-
     if (this.state.activeVideo) {
       if (popup !== POPUPS.FULLSCREEN && !UPDATE_VIDEOS.includes(this.state.activeVideo) )
         this.resetVideo(this.state.activeVideo)
@@ -573,6 +570,7 @@ class Desktop extends React.Component {
         hasLoaded={this.state.isVideoLoaded}
         playOpening={this.playOpening} 
         setDragging={this.setDragging}
+        closePopup={this.closePopup}
         isInstructions={true} />}
     </div>
   )
@@ -593,11 +591,13 @@ class Desktop extends React.Component {
 
   renderTime = () => {
     let {minutes, seconds} = this.state
+    let isRed = !minutes && seconds < 5
+
     minutes = minutes.toString()
     seconds = seconds.toString().length === 1 ? `0${seconds.toString()}` : seconds.toString()
   
     return (
-    <div className="time-text">{minutes}:{seconds}</div>
+    <div className={`time-text ${isRed ? 'red' : ''}`}>{minutes}:{seconds}</div>
     )
   }
 
@@ -634,7 +634,6 @@ class Desktop extends React.Component {
             data-ref="photosOpeningVideo"
             data-popup={POPUPS.PHOTOS}
             onClick={this.addPopup}></div>
-          <div data-ref="zoom" onClick={this.playVideo} className="dashboard-icon zoom"></div>
           <div className="right-dashboard"></div>
           <div onClick={this.playVideo} data-ref="trash" className="dashboard-icon trash"></div>
 
