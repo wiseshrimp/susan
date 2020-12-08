@@ -2,10 +2,7 @@ import React from 'react'
 import Draggable from 'react-draggable'
 
 
-export default class extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+export default class Clock extends React.Component {
     close = ev => {
         this.props.closePopup(this.props.type)
     }
@@ -30,7 +27,7 @@ export default class extends React.Component {
                     <div className="top-bar">
                         <div className="buttons">
                             <div onClick={this.close} className="close">
-                                <a className="closebutton"><span><strong>x</strong></span></a>
+                                <a href="" className="closebutton"><span><strong>x</strong></span></a>
                             </div>
                         </div>
                     </div>

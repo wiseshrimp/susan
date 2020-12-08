@@ -1,21 +1,23 @@
 import React from 'react'
 import Sketch from 'react-p5'
 import GlitchClip from 'react-glitch-effect/core/Clip'
-
-import './glitch.css'
-
 import Clock from './Clock'
 import Popup from './Popup'
 import Photos from './Photos'
 import Update from './Update'
+import Login from './Login'
 import {POPUPS, VIDEOS, VIDEO_LINKS, UPDATE_VIDEOS, SOUNDS} from './constants'
 import './App.css'
+import './glitch.css'
+
+
+import Delete from './Delete'
 
 import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = 9
+let NUM_OF_MINUTES = 40
 
  
 const AVATAR_PHOTOS = [
@@ -24,7 +26,7 @@ const AVATAR_PHOTOS = [
   Selfie3
 ]
 
-let isDev = false
+let isDev = true
 
 
 class Desktop extends React.Component {
@@ -149,6 +151,7 @@ class Desktop extends React.Component {
           component: <Update 
             id={id} 
             idx={id} 
+            key={id}
             update={this.updateDesktop} 
             isUpdating={this.state.isPlayingClosing}
             willDisappear={this.state.updateCount < 4} setDragging={this.setDragging} />
@@ -221,22 +224,28 @@ class Desktop extends React.Component {
     aImg.onload = ev => {
       let video = this.videoFeed.current
       var context, canvas
-      var width = video.offsetWidth
-        , height = video.offsetHeight
+      var width = video.offsetWidth, 
+      height = video.offsetHeight
   
       canvas = document.createElement('canvas')
       canvas.width = width
       canvas.height = height
-  
       context = canvas.getContext('2d')
       context.drawImage(video, 0, 0, width, height)
-      
       context.drawImage(aImg, width / 5, height - aImg.height / aImg.width * width, width, aImg.height / aImg.width * width)
   
       img.src = canvas.toDataURL('image/png')
       this.setState({
         images: [...this.state.images, img.src]
       })
+      if (this.state.images.length === 3) {
+        this.videoFeed.current.pause()
+        let tracks = this.videoFeed.current.srcObject.getTracks()
+        tracks[0].stop()
+        tracks[0].enabled = false
+        this.videoFeed.current.autoPlay = false
+        this.videoFeed = null
+      }
     }
   }
 
@@ -533,7 +542,6 @@ class Desktop extends React.Component {
           type={type}
           setDragging={this.setDragging}
           image={this.state.fullscreen}
-          setDragging={this.setDragging}
           closePopup={this.closePopup}
         />
       default:
@@ -543,7 +551,6 @@ class Desktop extends React.Component {
           isPrivateHidden={this.state.isPrivateHidden}
           images={type === POPUPS.PRIVATE ? this.state.images : []}
           addPopup={this.addPopup}  
-          setDragging={this.setDragging}
           closePopup={this.closePopup}
           playVideo={this.playVideo}
           setDragging={this.setDragging}
@@ -558,9 +565,8 @@ class Desktop extends React.Component {
   }
 
   renderVideo = (key, idx) => (
-    <div className="video-parent">
+    <div key={`${key}-${idx}`} className="video-parent">
       <video className="hidden-video" 
-        key={`${key}-${idx}`}
         width="500px" height="500px" 
         type="video/webm"  
         ref={this[key]}
@@ -574,12 +580,8 @@ class Desktop extends React.Component {
   renderFirstScreen = () => (
     <div>
       <div className="background"></div>
-      {this.state.isPlayingOpening ? null : <Popup 
-        hasLoaded={this.state.isVideoLoaded}
-        playOpening={this.playOpening} 
-        setDragging={this.setDragging}
-        closePopup={this.closePopup}
-        isInstructions={true} />}
+      {this.state.isPlayingOpening ? null : <Login hasLoaded={this.state.isVideoLoaded}
+        playOpening={this.playOpening}  />}
     </div>
   )
 
@@ -616,6 +618,8 @@ class Desktop extends React.Component {
       {this.state.isPlayingClosing ? null : <Sketch setup={this.setup} draw={this.draw} />}
       <div ref={this.glitchOverlay} className={`glitch-background ${this.state.isPlayingClosing || this.state.hasUpdated ? 'invisible' : ''}`}></div>
       <div>
+      <Delete />
+
         {this.state.popups.map(this.renderPopup)}
         {this.state.updates.map(this.renderUpdates)}
         <div className="os-container">
@@ -652,7 +656,7 @@ class Desktop extends React.Component {
   )
 
   renderSound = sound => (
-    <audio ref={this[sound.name]}>
+    <audio key={sound.name} ref={this[sound.name]}>
       <source src={sound.sound} type={`audio/${sound.type}`} />
     </audio>
   )

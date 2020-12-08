@@ -40,7 +40,7 @@ export default class Photos extends React.Component {
     }
 
     renderPhoto = img => (
-        <img key={img} data-popup={POPUPS.FULLSCREEN} data-img={img} onClick={this.props.addPopup} src={img} className="private-img" />
+        <img alt="You and Susan together" key={img} data-popup={POPUPS.FULLSCREEN} data-img={img} onClick={this.props.addPopup} src={img} className="private-img" />
     )
 
 
@@ -90,7 +90,7 @@ export default class Photos extends React.Component {
 
     renderFullscreen = () => (
         <div className="fullscreen-c">
-            <img src={this.props.image} className="fullscreen-img" />
+            <img alt="fullscreen of you and Susan together" src={this.props.image} className="fullscreen-img" />
         </div>
     )
 

@@ -100,11 +100,11 @@ export default class Popup extends React.Component {
             case 'work':
                 return (
                     <div ref={this.safariBody} className="safari-body">
-                    <iframe className="spreadsheet" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1FcmOAbh3wGzKmkMLinzyK27ioqewdgVUl4sJV4hHMdpI-CuN5cmtyetANHHRmh_kzLGKEzUbeX-C/pubhtml?widget=true&amp;headers=false"></iframe>                    </div>
+                    <iframe title="spreadsheet" className="spreadsheet" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1FcmOAbh3wGzKmkMLinzyK27ioqewdgVUl4sJV4hHMdpI-CuN5cmtyetANHHRmh_kzLGKEzUbeX-C/pubhtml?widget=true&amp;headers=false"></iframe>                    </div>
                 )
             default:
                 return (
-                    <iframe src={this.state.type === 'bing' ? 'https://bing.com' : ''} ref={this.safariIframe} className="iframe-safari" /> 
+                    <iframe title="browser" src={this.state.type === 'bing' ? 'https://bing.com' : ''} ref={this.safariIframe} className="iframe-safari" /> 
                 )
         }
     }

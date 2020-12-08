@@ -13,6 +13,15 @@
   src: url('./assets/Helvetica.ttf');
 }
 
+@font-face {
+  font-family: HelveticaNeue;
+  src: url('./assets/fonts/HelveticaNeueLTPro-UltLt.otf');
+}
+
+body {
+  font-family: HelveticaNeue, sans-serif;
+}
+
 
 a {
   /* color: #c98ffd;
@@ -227,39 +236,11 @@ body {
   border-radius: 2px;
 } */
 
-#about-me-btn {
-  background-image: url('./assets/SueIcon.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-#blog-btn {
-  background-image: url('./assets/cat.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-#blog-btn:after {
-  content: 'itp blog';
-}
 
 .continue-button {
   cursor: pointer;
 }
 
-#about-me-btn:after {
-  content: 'about me';
-}
-
-#work-btn {
-  background-image: url('./assets/monster.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-#work-btn:after {
-  content: 'work';
-}
 
 #start-button {
   height: 40px;
@@ -579,7 +560,7 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
 
 
 .topbar-text {
-  font-family: LucidaS;
+  font-family: HelveticaNeue, sans-serif;
   font-weight: bold;
   align-self: center;
   font-size: 12px;
