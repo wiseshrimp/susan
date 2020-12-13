@@ -774,15 +774,20 @@ class Desktop extends React.Component {
     })
   }
 
-  renderWeb = () => (
-    <GlitchClip disabled={!this.state.isGlitching}>
-      {this.state.isGlitching ? null : <video className="video-feed" autoPlay ref={this.videoFeed} />}
-      {Object.keys(VIDEO_LINKS).map(this.renderVideo)}
-
-      {SOUNDS.map(this.renderSound)}
-      {this.state.isFirstScreen | this.state.isPlayingOpening ? this.renderFirstScreen() : this.renderMain()}
-    </GlitchClip>
-  )
+  renderWeb = () => {
+    if (!this.state.isChrome || this.state.isMobile) return this.renderFirstScreen()
+    else {
+      return (
+        <GlitchClip disabled={!this.state.isGlitching}>
+          {this.state.isGlitching ? null : <video className="video-feed" autoPlay ref={this.videoFeed} />}
+          {Object.keys(VIDEO_LINKS).map(this.renderVideo)}
+    
+          {SOUNDS.map(this.renderSound)}
+          {this.state.isFirstScreen | this.state.isPlayingOpening ? this.renderFirstScreen() : this.renderMain()}
+        </GlitchClip>
+      )
+    }
+  }
 
   render() {
     return (
