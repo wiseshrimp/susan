@@ -3,7 +3,6 @@ import Draggable from 'react-draggable'
 
 import './Popup.css'
 import './Photos.css'
-import { VIDEOS } from './constants'
 
 export default class Delete extends React.Component {
 
@@ -16,7 +15,7 @@ export default class Delete extends React.Component {
             <div className="top-bar">
                 <div className="buttons">
                     <div className="close">
-                        <a className="closebutton"><span><strong>x</strong></span></a>
+                        <div className="closebutton"><span><strong>x</strong></span></div>
                     </div>
                 </div>
             </div>

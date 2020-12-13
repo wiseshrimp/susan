@@ -1,0 +1,28 @@
+.window.captions-window {
+    top: 10vh;
+    left: 10vw;
+    z-index: 4;
+    width: 500px;
+    height: 300px;
+}
+
+.captions-window>.top-bar {
+    z-index: 1;
+}
+
+.caption-videos {
+    pointer-events: none;
+    width: 100%;
+    height: calc(100% - 20px);
+}
+
+.caption-videos>.video-parent>video {
+    width: 100%;
+    height: 134%;
+    top: -37px;
+}
+
+.caption-videos>.video-parent {
+    width: 100%;
+    height: 100%;
+}

@@ -19,7 +19,7 @@
 }
 
 body {
-  font-family: HelveticaNeue, sans-serif;
+  font-family: LucidaG, sans-serif;
 }
 
 
@@ -548,6 +548,27 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   cursor: pointer;
 }
 
+.who {
+  background-image: url('./assets/profile-user.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 20px;
+  width: 20px;
+  margin: 3px 8px;
+  cursor: pointer;
+}
+
+.captions {
+  background-image: url('./assets/captions.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 25px;
+  width: 25px;
+  margin: 0px 8px;
+  cursor: pointer;
+}
+
 .battery {
   background-image: url('./assets/battery.png');
   background-size: contain;
@@ -703,4 +724,11 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   position: fixed;
   top: 0;
   /* background-image: url('https://d7hftxdivxxvm.cloudfront.net/?resize_to=width&src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F2RNK1P0BYVrSCZEy_Sd1Ew%252F3417757448_4a6bdf36ce_o.jpg&width=1200&quality=80'); */
+}
+
+.zoom-body > video {
+  position: relative;
+  left: -5%;
+  width: 110%;
+  height: auto;
 }

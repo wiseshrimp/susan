@@ -119,7 +119,7 @@ export default class Photos extends React.Component {
                     <div className="top-bar">
                     <div className="buttons">
                         <div onClick={this.close} className="close">
-                            <a className="closebutton"><span><strong>x</strong></span></a>
+                            <div className="closebutton"><span><strong>x</strong></span></div>
                         </div>
                     </div>
                     <div className="title-header">{this.props.type}</div>

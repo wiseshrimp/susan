@@ -24,11 +24,6 @@
     pointer-events: none;
 }
 
-.p-container {
-    top: -22px;
-    position: relative;
-}
-
 .photo-container {
     border: 2px #b4b4b4 solid;
     border-radius: 3px;
@@ -84,9 +79,9 @@
 
 .folder {
     background-image: url('./assets/folder1.png');
-    background-size: cover;
+    background-size: contain;
     height: 125px;
-
+    width: 125px;
 }
 
 .private-container {

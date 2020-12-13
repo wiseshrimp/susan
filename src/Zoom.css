@@ -1,0 +1,25 @@
+.zoom-container {
+    display: block;
+}
+
+.zoom-body {
+    background-color: #252525;
+    line-height: 0px;
+}
+
+.zoom-body > video {
+    box-shadow: 1px 1px 2px #242424;
+}
+
+.zoom-hidden {
+    display: none;
+}
+
+.zoom-container>.window {
+    width: 50%;
+    height: auto;
+}
+
+.zoom-body > img {
+    width: 100%;
+}

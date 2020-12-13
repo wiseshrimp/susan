@@ -1,0 +1,16 @@
+.clock-body {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.react-clock {
+    height: 200px;
+    width: 200px;
+}
+
+.window.clock {
+    max-height: 300px;
+    max-width: 300px;
+}

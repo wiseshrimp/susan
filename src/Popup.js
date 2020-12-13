@@ -40,6 +40,7 @@ export default class Popup extends React.Component {
     }
 
     close = ev => {
+        console.log(this.props.type, this.state.type)
         this.props.closePopup(this.props.type, this.state.type === 'work')
     }
 
@@ -57,24 +58,6 @@ export default class Popup extends React.Component {
         <div>
             <div className="instructions-text">
                 Hello!<br/>Currently, Susan only works on Google Chrome and on desktop. Please come again soon!
-            </div>
-        </div>
-    )
-
-    renderInstructions = () => (
-        <div className="window popup">
-            <div className="top-bar">
-                <div className="buttons">
-                    <div className="close">
-                        <a className="closebutton"><span><strong>x</strong></span></a>
-                    </div>
-                </div>
-            </div>
-            <div className="instructions-body">
-                <div className="instructions-container">
-                    {this.props.isFail ? this.renderFail() : this.renderInstructionsBody()}
-                </div>
-
             </div>
         </div>
     )
@@ -126,7 +109,7 @@ export default class Popup extends React.Component {
             <div className="top-bar">
                 <div className="buttons">
                     <div onClick={this.close} className="close">
-                        <a className="closebutton"><span><strong>x</strong></span></a>
+                        <div className="closebutton"><span><strong>x</strong></span></div>
                     </div>
                     <div className="back-c">
                         <div className="back"></div>
@@ -162,7 +145,7 @@ export default class Popup extends React.Component {
                 onStop={this.onDragEnd}
                 handle=".top-bar"
                 bounds="html">
-                {this.props.isInstructions ? this.renderInstructions() : this.renderSafari()}
+                    {this.renderSafari()}
             </Draggable>
         )
     }

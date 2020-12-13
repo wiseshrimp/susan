@@ -12,6 +12,10 @@
     100% { transform: translate(1px, 0); }
 }
 
+body {
+    font-family: HelveticaNeue, sans-serif;
+}
+
 .shake {
     animation: 1s shake;
 }
@@ -123,4 +127,45 @@
     background-size: contain;
     background-repeat: no-repeat;
     margin-top: auto;
+}
+
+.Login > .window {
+    z-index: 1000;
+    max-width: 400px;
+    max-height: 200px;
+}
+
+.Login > .window {
+    position: absolute;
+    left: calc(50vw - 200px);
+    top: calc(50vh - 100px);
+    font-family: 'Helvetica';
+    font-size: 14px;
+}
+
+.warning-icon {
+    height: 75px;
+    width: 75px;
+    background-image: url('./assets/warning.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.warning-body {
+    display: flex;
+    justify-content: center;
+    padding: 25px;
+    align-items: center;
+    height: 100%;
+}
+
+.warning-text {
+    margin-left: 25px;
+    line-height: 18px;
+}
+
+.warning-text > div {
+    margin-top: 10px;
+    font-size: 13px;
 }
