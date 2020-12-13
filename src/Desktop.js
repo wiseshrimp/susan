@@ -83,9 +83,11 @@ class Desktop extends React.Component {
     }
 
     this.setupWebcam()
-    this.textToSpeech = new SpeechSynthesisUtterance()
-    let voices = window.speechSynthesis.getVoices()
-    this.textToSpeech.voice = voices[1]
+    if (this.isChrome && !this.isMobile) {
+      this.textToSpeech = new SpeechSynthesisUtterance()
+      let voices = window.speechSynthesis.getVoices()
+      this.textToSpeech.voice = voices[1]
+    }
   }
 
   setupWebcam = () => {
