@@ -739,7 +739,7 @@ class Desktop extends React.Component {
             <div data-ref="wifi" onClick={this.playVideo} className="icon wifi"></div>
             <div onClick={this.turnOnCaptions} className="icon captions"></div>
             <div data-ref="battery" onClick={this.playVideo} className="icon battery"></div>
-            <div className="icon who"></div>
+            {/* <div className="icon who"></div> */}
             <div className="icon time" data-popup={POPUPS.CLOCK} onClick={this.addPopup} data-ref={VIDEOS.clockBeginning}></div>
             <div className="time-text">{this.renderTime()}</div>
           </div>
