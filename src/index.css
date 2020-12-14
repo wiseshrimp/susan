@@ -691,6 +691,7 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
 .video-feed {
   height: 60vh;
   width: auto;
+  visibility: hidden;
 }
 
 .bump {
