@@ -22,7 +22,31 @@ export default class Update extends React.Component {
         }
     }
 
-    disappear = ev => {2
+    disappear = ev => {
+        this.window.current.style.opacity = 0
+    }
+
+    onDragStart = ev => {
+        this.props.setDragging(true)
+
+    }
+
+    onDragStop = ev => {
+        this.props.setDragging(false)
+    }
+
+    closeUpdate = ev => {
+        this.setState({
+            isHidden: true
+        })
+    }
+
+    update = ev => {
+        this.props.update()
+    }
+
+    render() {
+        if (this.state.isHidden) return <div />
         return (
             <Draggable
                 onStart={this.onDragStart}
@@ -36,6 +60,7 @@ export default class Update extends React.Component {
                 bounds="html">
                 <div
                 ref={this.window}
+
                     className="window popup update-container" >
                     <div className="top-bar">
                         <div className="buttons">
