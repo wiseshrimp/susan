@@ -22,36 +22,17 @@ export default class Update extends React.Component {
         }
     }
 
-    disappear = ev => {
-        this.window.current.style.opacity = 0
-    }
-
-    onDragStart = ev => {
-        this.props.setDragging(true)
-
-    }
-
-    onDragStop = ev => {
-        this.props.setDragging(false)
-    }
-
-    closeUpdate = ev => {
-        this.setState({
-            isHidden: true
-        })
-    }
-
-    update = ev => {
-        this.props.update()
-    }
-
-    render() {
-        if (this.state.isHidden) return <div />
+    disappear = ev => {2
         return (
             <Draggable
                 onStart={this.onDragStart}
                 onStop={this.onDragStop}
                 handle=".top-bar"
+                style={{
+                    top: this.state.top, 
+                    left: this.state.left,
+                    pointerEvents: this.props.willDisappear || this.props.isUpdating ? 'none' : 'all'
+                }}
                 bounds="html">
                 <div
                 ref={this.window}
