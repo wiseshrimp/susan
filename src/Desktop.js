@@ -20,7 +20,7 @@ import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
 let NUM_OF_MINUTES = 8
-let isDev = true
+let isDev = false
  
 const AVATAR_PHOTOS = [
   Selfie1,
