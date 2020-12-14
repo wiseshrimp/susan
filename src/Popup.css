@@ -182,6 +182,14 @@
     box-shadow: 0 0 5px #545454;
     cursor: pointer;
     color: white;
+    display: flex;
+}
+
+.bing-text {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .fave-text {
@@ -237,12 +245,20 @@
   .close:active .closebutton {
     color: #4e0002;
   }
+
+  .close {
+      display: flex;
+  }
   
   .closebutton {
     color: #820005;
     visibility: hidden;
     cursor: pointer;
-    margin-left: 1px;
+
+    margin-top: auto;
+    margin-bottom: 1px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
 .safari-search {

@@ -3,6 +3,8 @@
     height: 150px;
     font-size: 13px;
     transition: all 1s;
+    left: calc(50vw - 125px);
+    top: calc(50vh - 75px);
 }
 
 .update-text {

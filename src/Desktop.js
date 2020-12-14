@@ -1,6 +1,7 @@
 import React from 'react'
 import Sketch from 'react-p5'
 import GlitchClip from 'react-glitch-effect/core/Clip'
+import Speech from 'speak-tts'
 
 import Captions from './Captions'
 import Clock from './Clock'
@@ -19,7 +20,7 @@ import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
 let NUM_OF_MINUTES = 7
-let isDev = true
+let isDev = false
  
 const AVATAR_PHOTOS = [
   Selfie1,
@@ -40,10 +41,11 @@ class Desktop extends React.Component {
     this.desktop = React.createRef()
     this.videoFeed = React.createRef()
     this.glitchOverlay = React.createRef()
+    this.speech = new Speech()
+    this.isSpeech = false
 
     this.updateInterval = null
     this.timeInterval = null
-    this.textToSpeech = null
     this.isUpdatingVideo = false
 
     this.state = {
@@ -82,12 +84,16 @@ class Desktop extends React.Component {
       document.addEventListener('mousedown', this.onDragStart)
     }
 
-    this.setupWebcam()
-    if (this.isChrome && !this.isMobile) {
-      this.textToSpeech = new SpeechSynthesisUtterance()
-      let voices = window.speechSynthesis.getVoices()
-      this.textToSpeech.voice = voices[1]
+    if (this.speech.hasBrowserSupport()) {
+      this.speech.init({
+        volume: 1,
+        voice: 'Google UK English Female'
+      }).then(data => {
+        this.isSpeech = true
+      })
     }
+
+    this.setupWebcam()
   }
 
   setupWebcam = () => {
@@ -399,8 +405,8 @@ class Desktop extends React.Component {
       hasUpdated: true
     })
     this.desktop.current.style.opacity = 1
-    this.startup.current.play()
-    setTimeout(this.introduceNewSusan, 2000)
+    this.startupDistorted.current.play()
+    setTimeout(this.introduceNewSusan, 9000)
   }
 
   introduceNewSusan = ev => {
@@ -479,7 +485,7 @@ class Desktop extends React.Component {
     })
   }
 
-  onLoadedData = ev => {
+  onCanPlayThrough = ev => {
     if (ev.target.dataset.ref === VIDEOS.emptyRoomVideo || ev.target.dataset.ref === VIDEOS.clockBeginning) {
       ev.target.addEventListener('timeupdate', this.onTimeUpdate)
     }
@@ -608,6 +614,7 @@ class Desktop extends React.Component {
           setDragging={this.setDragging}
           playVideo={this.playVideo}
           type={type}
+          resetVideo={this.resetVideo}
           closePopup={this.closePopup} />
       case POPUPS.FULLSCREEN:
         return <Photos 
@@ -638,12 +645,18 @@ class Desktop extends React.Component {
       ev.target.pause()
       if (video === VIDEOS.clockBeginning) {
         this.isUpdatingVideo = true
-        this.textToSpeech.text = formatTime(new Date())
-        window.speechSynthesis.speak(this.textToSpeech)
-        this.textToSpeech.onend = () => {
-          this.isUpdatingVideo = false
-          this.playVideo(VIDEOS.clockEnd, false)
+        if (this.isSpeech) {
+          this.speech.speak({
+            text: formatTime(new Date()),
+            listeners: {
+              onend: () => {
+                this.isUpdatingVideo = false
+                this.playVideo(VIDEOS.clockEnd, false)
+              }
+            }
+          })
         }
+
       }
     }
   }
@@ -655,7 +668,7 @@ class Desktop extends React.Component {
         type="video/webm"  
         ref={this[key]}
         data-ref={key}
-        onLoadedData={this.onLoadedData}
+        onCanPlayThrough={this.onCanPlayThrough}
         onEnded={this.hideVideo}
         src={VIDEO_LINKS[key]} />
     </div>

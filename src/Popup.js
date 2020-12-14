@@ -40,7 +40,6 @@ export default class Popup extends React.Component {
     }
 
     close = ev => {
-        console.log(this.props.type, this.state.type)
         this.props.closePopup(this.props.type, this.state.type === 'work')
     }
 
@@ -70,11 +69,14 @@ export default class Popup extends React.Component {
                         <div className="h3">Favorites</div>
                         <div className="favorites-container">
                             <div onClick={this.setType} data-type='work' data-ref="safariWork" className="fave-c">
-                                <div data-type='work' data-ref="safariWork" className="fave-icon">W</div>
-                                <div data-type='work' data-ref="safariWork" className="fave-text">Work</div>
+                                <div data-type='work' data-ref="safariWork" className="fave-icon">
+                                    <div data-type="work" data-ref="safariWork" className="bing-text">W</div></div>
+                                    <div data-type='work' data-ref="safariWork" className="fave-text">Work</div>
                             </div>
                             <div onClick={this.setType} data-type='bing' data-ref="safariBing" className="fave-c">
-                                <div data-type='bing'  data-ref="safariBing" className="fave-icon bing-icon">B</div>
+                                <div data-type='bing'  data-ref="safariBing" className="fave-icon bing-icon">
+                                    <div data-type="bing" data-ref="safariBing" className="bing-text">B</div>
+                                </div>
                                 <div data-type='bing' data-ref="safariBing" className="fave-text">Bing</div>
                             </div>
                         </div>
@@ -95,8 +97,12 @@ export default class Popup extends React.Component {
     setType = ev => {
         if (ev.target.dataset.ref) {
             this.props.playVideo(ev)
-        } else if (this.state.type === 'work' && ev.target.dataset.type !== 'work') {
+        } 
+        if (this.state.type === 'work' && ev.target.dataset.type !== 'work') {
             this.props.playVideo(VIDEOS.safariWorkEnd, false)
+        } 
+        if (this.state.type === 'bing' && ev.target.dataset.type !== 'bing') {
+            this.props.resetVideo(VIDEOS.safariBing)
         }
         this.setState({
             type: ev.target.dataset.type

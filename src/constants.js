@@ -1,5 +1,6 @@
 import Startup from './assets/sounds/startup.wav'
 import Notification from './assets/sounds/notification.ogg'
+import StartupDistorted from './assets/sounds/startup_distorted.mp3'
 
 const SOUNDS = [
   {
@@ -11,6 +12,11 @@ const SOUNDS = [
     name: 'notification',
     sound: Notification,
     type: 'ogg'
+  },
+  {
+    name: 'startupDistorted',
+    sound: StartupDistorted,
+    type: 'mp3'
   }
 ]
 
