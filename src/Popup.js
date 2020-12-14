@@ -70,11 +70,16 @@ export default class Popup extends React.Component {
                         <div className="h3">Favorites</div>
                         <div className="favorites-container">
                             <div onClick={this.setType} data-type='work' data-ref="safariWork" className="fave-c">
-                                <div data-type='work' data-ref="safariWork" className="fave-icon">W</div>
+                                <div data-type='work' data-ref="safariWork" className="fave-icon">
+                                <div className="bing-text">W</div>
+
+                                </div>
                                 <div data-type='work' data-ref="safariWork" className="fave-text">Work</div>
                             </div>
                             <div onClick={this.setType} data-type='bing' data-ref="safariBing" className="fave-c">
-                                <div data-type='bing'  data-ref="safariBing" className="fave-icon bing-icon">B</div>
+                                <div data-type='bing'  data-ref="safariBing" className="fave-icon bing-icon">
+                                    <div className="bing-text">B</div>
+                                </div>
                                 <div data-type='bing' data-ref="safariBing" className="fave-text">Bing</div>
                             </div>
                         </div>

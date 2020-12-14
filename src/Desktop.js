@@ -1,6 +1,7 @@
 import React from 'react'
 import Sketch from 'react-p5'
 import GlitchClip from 'react-glitch-effect/core/Clip'
+import Speech from 'speak-tts'
 
 import Captions from './Captions'
 import Clock from './Clock'
@@ -18,8 +19,8 @@ import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = 7
-let isDev = false
+let NUM_OF_MINUTES = 8
+let isDev = true
  
 const AVATAR_PHOTOS = [
   Selfie1,
@@ -40,10 +41,11 @@ class Desktop extends React.Component {
     this.desktop = React.createRef()
     this.videoFeed = React.createRef()
     this.glitchOverlay = React.createRef()
+    this.speech = new Speech()
+    this.isSpeech = false
 
     this.updateInterval = null
     this.timeInterval = null
-    this.textToSpeech = null
     this.isUpdatingVideo = false
 
     this.state = {
@@ -82,12 +84,16 @@ class Desktop extends React.Component {
       document.addEventListener('mousedown', this.onDragStart)
     }
 
-    this.setupWebcam()
-    if (this.isChrome && !this.isMobile) {
-      this.textToSpeech = new SpeechSynthesisUtterance()
-      let voices = window.speechSynthesis.getVoices()
-      this.textToSpeech.voice = voices[1]
+    if (this.speech.hasBrowserSupport()) {
+      this.speech.init({
+        volume: 1,
+        voice: 'Google UK English Female'
+      }).then(data => {
+        this.isSpeech = true
+      })
     }
+
+    this.setupWebcam()
   }
 
   setupWebcam = () => {
@@ -638,12 +644,18 @@ class Desktop extends React.Component {
       ev.target.pause()
       if (video === VIDEOS.clockBeginning) {
         this.isUpdatingVideo = true
-        this.textToSpeech.text = formatTime(new Date())
-        window.speechSynthesis.speak(this.textToSpeech)
-        this.textToSpeech.onend = () => {
-          this.isUpdatingVideo = false
-          this.playVideo(VIDEOS.clockEnd, false)
+        if (this.isSpeech) {
+          this.speech.speak({
+            text: formatTime(new Date()),
+            listeners: {
+              onend: () => {
+                this.isUpdatingVideo = false
+                this.playVideo(VIDEOS.clockEnd, false)
+              }
+            }
+          })
         }
+
       }
     }
   }
