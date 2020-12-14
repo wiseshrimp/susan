@@ -20,7 +20,7 @@ import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
 let NUM_OF_MINUTES = 8
-let isDev = false
+let isDev = true
  
 const AVATAR_PHOTOS = [
   Selfie1,
@@ -614,6 +614,7 @@ class Desktop extends React.Component {
           setDragging={this.setDragging}
           playVideo={this.playVideo}
           type={type}
+          resetVideo={this.resetVideo}
           closePopup={this.closePopup} />
       case POPUPS.FULLSCREEN:
         return <Photos 
