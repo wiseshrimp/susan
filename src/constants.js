@@ -94,7 +94,7 @@ const VIDEOS = {
     updateNotification3: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/UpdateNotification3.webm',
     preUpdate: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/PreUpdate.webm',
     endingSequence: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Updating_Glitch.webm',
-    newSusan: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/New_Susan.webm',
+    newSusan: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/New_Susan_1.webm',
     zoom: 'https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/Zoom.webm'
   }
 

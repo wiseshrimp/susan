@@ -19,7 +19,7 @@ import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = 7
+let NUM_OF_MINUTES = 8
 let isDev = false
  
 const AVATAR_PHOTOS = [
@@ -69,7 +69,7 @@ class Desktop extends React.Component {
       hasUpdated: false,
       isPlayingClosing: false,
       isMobile:  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-      isChrome: !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime),
+      isChrome: true,
       isZoom: false,
       minutes: NUM_OF_MINUTES,
       seconds: 0
@@ -78,6 +78,7 @@ class Desktop extends React.Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.onResize)
+    this.checkWebm()
     if (isDev) { // Skip startup screen
       setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
       this.timeInterval = setInterval(this.updateTime, 1000)
@@ -94,6 +95,18 @@ class Desktop extends React.Component {
     }
 
     this.setupWebcam()
+  }
+
+  checkWebm = () => {
+    var testEl = document.createElement( "video" ),
+      isWebm
+    if ( testEl.canPlayType ) {
+        // Check for Webm support
+        isWebm = "" !== testEl.canPlayType( 'video/webm; codecs="vp8, vorbis"' )
+    }
+    this.setState({
+      isChrome: isWebm
+    })
   }
 
   setupWebcam = () => {
