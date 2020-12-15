@@ -52,16 +52,13 @@ export default class Update extends React.Component {
                 onStart={this.onDragStart}
                 onStop={this.onDragStop}
                 handle=".top-bar"
-                style={{
-                    top: this.state.top, 
-                    left: this.state.left,
-                    pointerEvents: this.props.willDisappear || this.props.isUpdating ? 'none' : 'all'
-                }}
+
                 bounds="html">
                 <div
                 ref={this.window}
                 style={{
-
+                    top: this.state.top, 
+                    left: this.state.left,
                     pointerEvents: this.props.willDisappear || this.props.isUpdating ? 'none' : 'all'
                 }}
                     className="window popup update-container" >
