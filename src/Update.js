@@ -60,7 +60,10 @@ export default class Update extends React.Component {
                 bounds="html">
                 <div
                 ref={this.window}
+                style={{
 
+                    pointerEvents: this.props.willDisappear || this.props.isUpdating ? 'none' : 'all'
+                }}
                     className="window popup update-container" >
                     <div className="top-bar">
                         <div className="buttons">
