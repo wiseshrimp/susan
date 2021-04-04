@@ -692,8 +692,9 @@ class Desktop extends React.Component {
       <div className="background"></div>
       {this.state.isPlayingOpening ? null : <Login  hasLoaded={this.state.isVideoLoaded}
                                                     playOpening={this.playOpening}
-                                                    turnOffCaption={this.turnOffCaptions}
+                                                    turnOffCaptions={this.turnOffCaptions}
                                                     turnOnCaptions={this.turnOnCaptions}
+                                                    isCaptions={this.state.isCaptions}
                                                     isMobile={this.state.isMobile || !this.state.isChrome}  />}
     </div>
   )
@@ -749,6 +750,7 @@ class Desktop extends React.Component {
             <div data-ref={VIDEOS.apple} onClick={this.playVideo} className="icon apple"></div>
           </div>
           <div className="right-bar-container">
+            <div data-ref="credits" onClick={this.addPopup} data-popup={POPUPS.CREDITS} className="icon who"></div>
             <div data-ref="wifi" onClick={this.playVideo} className="icon wifi"></div>
             <div onClick={this.turnOnCaptions} className="icon captions"></div>
             <div data-ref="battery" onClick={this.playVideo} className="icon battery"></div>

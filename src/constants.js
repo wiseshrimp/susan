@@ -66,7 +66,8 @@ const VIDEOS = {
     PRIVATE: 'Private',
     TREE: 'Tree',
     FULLSCREEN: 'Fullscreen',
-    CLOCK: 'Clock'
+    CLOCK: 'Clock',
+    CREDITS: 'Credits'
   }
   
   const VIDEO_LINKS = {
@@ -137,4 +138,11 @@ const POPUP_VIDEOS = {
   [POPUPS.CLOCK]: [VIDEOS.clockBeginning, VIDEOS.clockEnd]
 }
 
-  export {VIDEOS, POPUPS, VIDEO_LINKS, UPDATE_VIDEOS, POPUP_VIDEOS, SOUNDS, CAPTION_VIDEO_LINKS}
+const CREDITS = `
+  <div>coded, written, and animated by <a href="https://www.sueroh.com" target="_blank">Sue Roh</a></div>
+  <div>voiced by Abigail Thomas</div>
+  <div>a big thanks to Matt Romein for your help + support!</div>
+  <div>inspired by Susan Bennet and Susan Caplin, the voices behind Siri and Alexa respectively</div>
+`
+
+  export {CREDITS, VIDEOS, POPUPS, VIDEO_LINKS, UPDATE_VIDEOS, POPUP_VIDEOS, SOUNDS, CAPTION_VIDEO_LINKS}

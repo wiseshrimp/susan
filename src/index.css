@@ -528,6 +528,16 @@ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   cursor: pointer;
 }
 
+.heart {
+  background-image: url('./assets/heart.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 19px;
+  width: 19px;
+  margin: 3px 8px;
+  cursor: pointer;
+}
+
 .time {
   background-image: url('./assets/clock.png');
   background-size: contain;

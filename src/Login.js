@@ -7,10 +7,19 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            areCaptions: false
+            areCaptions: false,
+            isHint: false
         }
 
         this.input = React.createRef()
+    }
+
+    componentDidUpdate = () => {
+        if (this.props.isCaptions != this.state.areCaptions) {
+            this.setState({
+                areCaptions: this.props.isCaptions
+            })
+        }
     }
 
     toggleCaptions = ev => {
@@ -32,10 +41,30 @@ export default class Login extends React.Component {
         }
     }
 
+    activateHint = ev => {
+        if (this.state.isHint) return
+        this.setState({
+            isHint: true
+        })
+        setTimeout(this.deactivateHint, 5000)
+    }
+
+    deactivateHint = ev => {
+        this.setState({
+            isHint: false
+        })
+    }
+
     renderInput = () => (
         <div className="login-container">
             <div className="user-icon"></div>
-            <input ref={this.input} onKeyDown={this.onKeyDown} className="password-input" placeholder="Enter Password" type="password"></input>
+            <div className="login-input-container">
+                <input 
+                    onClick={this.activateHint}
+                    ref={this.input} onKeyDown={this.onKeyDown} className="password-input" placeholder="Enter Password" type="password"></input>
+            </div>
+            <div className={`hint ${this.state.isHint ? 'active' : ''}`}>Anything you want...</div>
+
             <div id="icons">
                 <div onClick={this.toggleCaptions} className={`icon-container ${this.state.areCaptions ? 'activated' : ''}`}>
                     <div id="accessibility"></div>

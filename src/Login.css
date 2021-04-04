@@ -105,14 +105,16 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 11px;
-    transition: background-color 0.1s ease-in-out box-shadow 0.1s ease-in-out;
+    background-color: none;
+    box-shadow: 0px;
+    transition: .5s all;
 }
 
 .icon-container.activated {
-    padding: 10px;
+    /* margin: 10px; */
     background-color: #ffffff1a;
-    box-shadow: 0px 0px 10px #ffffff63;
-    border: 0.8px solid #ffffff5e;
+    /* box-shadow: 0px 0px 10px #ffffff63; */
+    border: 0.2px solid #ffffff5e;
     border-style: outset;
 }
 
@@ -168,4 +170,23 @@ body {
 .warning-text > div {
     margin-top: 10px;
     font-size: 13px;
+}
+
+.login-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.hint {
+    opacity: 0;
+    font-family: 'HelveticaNeue', sans-serif;
+    color: #e0e0e0;
+    margin-top: 8px;
+    letter-spacing: 0.9px;
+    font-size: 12px;
+    transition: all 0.5s;
+}
+
+.hint.active {
+    opacity: 1;
 }

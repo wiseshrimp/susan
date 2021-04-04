@@ -1,6 +1,6 @@
 import React from 'react'
 import Draggable from 'react-draggable'
-import { POPUPS } from './constants'
+import { POPUPS, CREDITS } from './constants'
 
 import './Popup.css'
 
@@ -83,10 +83,18 @@ export default class Photos extends React.Component {
                 return this.renderIcons()
             case POPUPS.FULLSCREEN:
                 return this.renderFullscreen()
+            case POPUPS.CREDITS:
+                return this.renderText()
             default:
                 return this.renderPhotos()
         }
     }
+
+    renderText = () => (
+        <div className="credits-text">
+            <div dangerouslySetInnerHTML={{__html: CREDITS}}></div>
+        </div>
+    )
 
     renderFullscreen = () => (
         <div className="fullscreen-c">

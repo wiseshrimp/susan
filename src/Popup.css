@@ -185,6 +185,21 @@
     display: flex;
 }
 
+.credits-text {
+    display: flex;
+    padding: 25px;
+    text-align: center;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Helvetica', sans-serif;
+}
+
+.credits-text > div {
+    width: 100%;
+    line-height: 22px;
+}
+
 .bing-text {
     margin-left: auto;
     margin-right: auto;
@@ -224,6 +239,10 @@
   
   }
 
+  .closebutton > span > strong {
+      vertical-align: 50%;
+  }
+
   .favorites-container {
       display: flex;
   }
@@ -256,7 +275,7 @@
     cursor: pointer;
 
     margin-top: auto;
-    margin-bottom: 1px;
+    margin-bottom: auto;
     margin-left: auto;
     margin-right: auto;
   }
