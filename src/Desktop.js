@@ -1,6 +1,6 @@
 import React from 'react'
 import Sketch from 'react-p5'
-import GlitchClip from 'react-glitch-effect/core/Clip'
+// import GlitchClip from 'react-glitch-effect/core/Clip'
 import Speech from 'speak-tts'
 
 import Captions from './Captions'
@@ -40,9 +40,9 @@ class Desktop extends React.Component {
 
     this.desktop = React.createRef()
     this.videoFeed = React.createRef()
-    this.glitchOverlay = React.createRef()
     this.speech = new Speech()
     this.isSpeech = false
+    this.glitchOverlay = React.createRef()
 
     this.updateInterval = null
     this.timeInterval = null
@@ -64,7 +64,6 @@ class Desktop extends React.Component {
       isPlayingOpening: false,
       fullscreen: '',
       isDraggingScreen: false,
-      isGlitching: false,
       updateCount: 0,
       hasUpdated: false,
       isPlayingClosing: false,
@@ -118,6 +117,9 @@ class Desktop extends React.Component {
           setTimeout(this.takePhoto, 3000)
           setTimeout(this.takePhoto, 15000)
           setTimeout(this.takePhoto, 20000)        
+        })
+        .catch(err => {
+
         })
     }
     else {
@@ -181,10 +183,10 @@ class Desktop extends React.Component {
     this.desktop.current.style.opacity = 0
     clearInterval(this.updateInterval)
     this.setState({
-      isGlitching: false,
       isPlayingClosing: true,
       popups: []
     })
+    this.props.stopGlitch()
     setTimeout(this.playClosingSequence, 6000)
   }
 
@@ -526,7 +528,6 @@ class Desktop extends React.Component {
       popups: [],
       images: [],
       updates: [],
-      isGlitching: false,
       hasUpdated: false,
       updateCount: 0,
       isPlayingClosing: false,
@@ -535,6 +536,7 @@ class Desktop extends React.Component {
       isPrivateHidden: false,
       renderRevert: false
     })
+    this.props.stopGlitch()
     this.timeInterval = setInterval(this.updateTime, 1000)
     this.videoFeed = React.createRef()
     this.setupWebcam()
@@ -556,8 +558,8 @@ class Desktop extends React.Component {
         this.playVideo(VIDEOS.preUpdate, false)
         this.setState({
           updateCount: this.state.updateCount + 1,
-          isGlitching: true
         })
+        this.props.startGlitch()
         return
       } else {
         setTimeout(this.addUpdate, 5500)
@@ -742,9 +744,6 @@ class Desktop extends React.Component {
         video={this.zoom}
       />
         <div className="os-container">
-          <GlitchClip disabled={!this.state.isGlitching}>
-            <div className={`background ${this.state.isPlayingClosing || this.state.hasUpdated ? 'newbackground' : ''} ${this.state.isPlayingClosing ? 'invisible' : ''}`} onMouseLeave={this.onMouseLeave} />
-          </GlitchClip>
         <div className={`top-bar-container ${this.state.isPlayingClosing || this.state.hasUpdated ? 'invisible' : ''}`}>
           <div className="left-bar-container">
             <div data-ref={VIDEOS.apple} onClick={this.playVideo} className="icon apple"></div>
@@ -808,13 +807,13 @@ class Desktop extends React.Component {
     if (!this.state.isChrome || this.state.isMobile) return this.renderFirstScreen()
     else {
       return (
-        <GlitchClip disabled={!this.state.isGlitching}>
-          {this.state.isGlitching ? null : <video className="video-feed" autoPlay ref={this.videoFeed} />}
+        <div disabled={!this.props.isGlitching}>
+          {this.props.isGlitching ? null : <video className="video-feed" autoPlay ref={this.videoFeed} />}
           {Object.keys(VIDEO_LINKS).map(this.renderVideo)}
     
           {SOUNDS.map(this.renderSound)}
           {this.state.isFirstScreen | this.state.isPlayingOpening ? this.renderFirstScreen() : this.renderMain()}
-        </GlitchClip>
+        </div>
       )
     }
   }
