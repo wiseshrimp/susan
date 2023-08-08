@@ -33,10 +33,12 @@ const DesktopContainer = () => {
     const [isGlitching, setGlitch] = useState(false)
 
     const startGlitch = () => {
+        glitch.startGlitch()
         setGlitch(true)
     }
 
     const stopGlitch = () => {
+      glitch.stopGlitch()
         setGlitch(false)
     }
 

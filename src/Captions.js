@@ -74,7 +74,7 @@ export default class Captions extends React.Component {
                     <div className="top-bar">
                         <div className="buttons">
                             <div onClick={this.close} className="close">
-                                <div className="closebutton"><span><strong>x</strong></span></div>
+                                <div className="closebutton"><span><strong>×</strong></span></div>
                             </div>
                         </div>
                         <div className="title-header">Captions</div>

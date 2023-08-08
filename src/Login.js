@@ -65,12 +65,12 @@ export default class Login extends React.Component {
             </div>
             <div className={`hint ${this.state.isHint ? 'active' : ''}`}>Anything you want...</div>
 
-            <div id="icons">
+            {/* <div id="icons">
                 <div onClick={this.toggleCaptions} className={`icon-container ${this.state.areCaptions ? 'activated' : ''}`}>
                     <div id="accessibility"></div>
                     <div className="icon-text">Captions</div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 

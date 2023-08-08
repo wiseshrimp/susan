@@ -185,6 +185,8 @@ body {
     letter-spacing: 0.9px;
     font-size: 12px;
     transition: all 0.5s;
+    margin-bottom: auto;
+
 }
 
 .hint.active {

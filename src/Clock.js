@@ -47,7 +47,7 @@ export default class TopBarClock extends React.Component{
                     <div className="top-bar">
                         <div className="buttons">
                             <div onClick={this.close} className="close">
-                                <div href="" className="closebutton"><span><strong>x</strong></span></div>
+                                <div href="" className="closebutton"><span><strong>×</strong></span></div>
                             </div>
                         </div>
                         <div className="title-header">Clock</div>

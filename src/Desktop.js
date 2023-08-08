@@ -3,7 +3,7 @@ import Sketch from 'react-p5'
 // import GlitchClip from 'react-glitch-effect/core/Clip'
 import Speech from 'speak-tts'
 
-import Captions from './Captions'
+// import Captions from './Captions'
 import Clock from './Clock'
 import Popup from './Popup'
 import Photos from './Photos'
@@ -19,7 +19,7 @@ import Selfie1 from './assets/Selfie1.png'
 import Selfie2 from './assets/Selfie2.png'
 import Selfie3 from './assets/Selfie3.png'
 
-let NUM_OF_MINUTES = 7
+let NUM_OF_MINUTES = 1
 let isDev = false
  
 const AVATAR_PHOTOS = [
@@ -60,7 +60,7 @@ class Desktop extends React.Component {
       isPrivateHidden: false,
       images: [],
       updates: [],
-      isFirstScreen: isDev ? false : true,
+      isFirstScreen: true,
       isPlayingOpening: false,
       fullscreen: '',
       isDraggingScreen: false,
@@ -541,6 +541,7 @@ class Desktop extends React.Component {
     this.videoFeed = React.createRef()
     this.setupWebcam()
     setTimeout(this.addUpdate, NUM_OF_MINUTES * 60000)
+    this.glitchOverlay.current.style.opacity = 0
     this.desktop.current.style.opacity = 1
   }
 
@@ -635,6 +636,7 @@ class Desktop extends React.Component {
         return <Photos 
           key={`${type}-${idx}`}
           type={type}
+          isWebcam={this.videoFeed?.current}
           setDragging={this.setDragging}
           image={this.state.fullscreen}
           closePopup={this.closePopup}
@@ -656,6 +658,14 @@ class Desktop extends React.Component {
   onTimeUpdate = ev => {
     let video = ev.target.dataset.ref
     if (this.isUpdatingVideo) return
+
+    if (video === VIDEOS.endingSequence) {
+      var seconds = video.currentTime % 60
+      if (seconds >= 19 && this.props.isGlitching) {
+        this.props.stopGlitch()
+      }
+    }
+
     if (ev.target.currentTime > ev.target.duration - 0.2) {
       ev.target.pause()
       if (video === VIDEOS.clockBeginning) {
@@ -732,6 +742,7 @@ class Desktop extends React.Component {
   renderMain = () => (
     <div>
       {this.state.isPlayingClosing ? null : <Sketch setup={this.setup} draw={this.draw} />}
+      <div className='background'></div>
       <div ref={this.glitchOverlay} className={`glitch-background ${this.state.isPlayingClosing || this.state.hasUpdated ? 'invisible' : ''}`}></div>
       <div>
         {this.state.popups.map(this.renderPopup)}
@@ -783,13 +794,13 @@ class Desktop extends React.Component {
     </audio>
   )
 
-  renderCaptions = () => (
-    <Captions
-      setDragging={this.setDragging}
-      activeVideo={this.state.activeVideo}
-      turnOffCaptions={this.turnOffCaptions}
-    />
-  )
+  // renderCaptions = () => (
+  //   <Captions
+  //     setDragging={this.setDragging}
+  //     activeVideo={this.state.activeVideo}
+  //     turnOffCaptions={this.turnOffCaptions}
+  //   />
+  // )
 
   turnOnCaptions = () => {
     this.setState({
@@ -823,7 +834,7 @@ class Desktop extends React.Component {
       <div className="desktop" ref={this.desktop}>
         {this.renderWeb()}
         {this.state.renderRevert ? this.renderRevert() : null}
-        {this.state.isCaptions ? this.renderCaptions() : null}
+        {/* {this.state.isCaptions ? this.renderCaptions() : null} */}
       </div>
     )
   }

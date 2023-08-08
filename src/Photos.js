@@ -44,7 +44,7 @@ export default class Photos extends React.Component {
     )
 
 
-    renderPrivate = () => (
+    renderPrivate = () => ( 
         <div className={`i-container p-container ${this.props.isPrivateHidden ? 'hidden-private' : ''}`}
             data-ref="privateFolderVideo" data-popup={POPUPS.PRIVATE} onClick={this.props.addPopup}>
                 <div data-ref="privateFolderVideo" data-popup={POPUPS.PRIVATE} className="photos-icon folder"></div>
@@ -73,7 +73,7 @@ export default class Photos extends React.Component {
                 </div>
                 <div className="icon-title">tree</div>
             </div>
-            {this.renderPrivate()}
+            {this.props.isWebcam ? this.renderPrivate() : null}
         </div>
     )
 
@@ -127,7 +127,7 @@ export default class Photos extends React.Component {
                     <div className="top-bar">
                     <div className="buttons">
                         <div onClick={this.close} className="close">
-                            <div className="closebutton"><span><strong>x</strong></span></div>
+                            <div className="closebutton"><span><strong>×</strong></span></div>
                         </div>
                     </div>
                     <div className="title-header">{this.props.type}</div>

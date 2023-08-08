@@ -54,7 +54,7 @@ export default class Zoom extends React.Component {
                 <div className="top-bar">
                 <div className="buttons">
                     <div onClick={this.close} className="close">
-                        <div className="closebutton"><span><strong>x</strong></span></div>
+                        <div className="closebutton"><span><strong>×</strong></span></div>
                     </div>
                 </div>
                 <div className="title-header">Zoom</div>
@@ -75,15 +75,16 @@ export default class Zoom extends React.Component {
         <video 
             onEnded={this.hideVideo}
             ref={this.videoEl}
+            muted={true}
             onTimeUpdate={this.onTimeUpdate}
-            src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/ZoomWindow_3.mp4" />
+            src="https://sues-website.s3.us-east-2.amazonaws.com/susan/ZoomWindow.mp4" />
     )
 
     renderZoomBar = () => (
         <img 
             ref={this.bottomBar}
             alt="bottom bar menu of Zoom app with mute, pause video, etc."
-            src="https://sues-website.s3.us-east-2.amazonaws.com/internetgirl/BottomBar2.png" />
+            src="https://sues-website.s3.us-east-2.amazonaws.com/susan/BottomBar.png" />
     )
 
     onTimeUpdate = ev => {
